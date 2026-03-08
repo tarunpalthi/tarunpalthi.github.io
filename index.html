@@ -4645,5 +4645,451 @@ function toggleProj(el) {
   wrap.addEventListener("touchend", function(e) { e.preventDefault(); playIntro(); }, {passive:false});
 })();
 </script>
+
+<!-- ============================================================
+     PORTFOLIO CHATBOT
+     ============================================================ -->
+<style>
+  /* ── Launcher button ── */
+  #chatLauncher {
+    position: fixed;
+    bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+    right: 28px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #58a6ff, #a78bfa);
+    border: none;
+    cursor: pointer;
+    z-index: 99998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(88,166,255,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  #chatLauncher:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(88,166,255,0.6); }
+
+  /* Restore default cursor over all chatbot elements */
+  #chatLauncher, #chatWindow, #chatWindow *,
+  #chatInput, #chatSendBtn, .chat-suggestion {
+    cursor: auto;
+  }
+  #chatLauncher, #chatSendBtn, .chat-suggestion {
+    cursor: pointer;
+  }
+  #chatInput {
+    cursor: text;
+  }
+  #chatLauncher svg { width: 26px; height: 26px; fill: #fff; transition: opacity 0.2s; }
+  #chatLauncher .icon-close { display: none; }
+  #chatLauncher.open .icon-open { display: none; }
+  #chatLauncher.open .icon-close { display: block; }
+
+  /* ── Chat window ── */
+  #chatWindow {
+    position: fixed;
+    bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+    right: 28px;
+    width: 360px;
+    max-width: calc(100vw - 40px);
+    height: 520px;
+    max-height: calc(100vh - 140px);
+    background: var(--card, #161b22);
+    border: 1px solid rgba(88,166,255,0.2);
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    z-index: 99997;
+    overflow: hidden;
+    transform: scale(0.92) translateY(12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
+  }
+  /* Mobile: smaller window, account for keyboard */
+  @media (max-width: 480px) {
+    #chatWindow {
+      right: 12px;
+      left: 12px;
+      width: auto;
+      max-width: none;
+      height: 60vh;
+      max-height: 60vh;
+      bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+      border-radius: 16px;
+    }
+    #chatLauncher {
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      right: 20px;
+    }
+  }
+  #chatWindow.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  body.light-mode #chatWindow {
+    background: #fff;
+    border-color: rgba(88,166,255,0.25);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  /* ── Header ── */
+  #chatHeader {
+    padding: 14px 18px;
+    background: linear-gradient(135deg, rgba(88,166,255,0.12), rgba(167,139,250,0.12));
+    border-bottom: 1px solid rgba(88,166,255,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  #chatHeader .chat-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg,#58a6ff,#a78bfa);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  #chatHeader .chat-title { flex: 1; }
+  #chatHeader .chat-title strong {
+    display: block; font-size: 0.85rem; font-weight: 700;
+    color: var(--text, #cdd9e5);
+    font-family: 'Syne', sans-serif;
+  }
+  body.light-mode #chatHeader .chat-title strong { color: #1c2128; }
+  #chatHeader .chat-title span {
+    font-size: 0.68rem; color: var(--muted, #768390);
+  }
+  .chat-status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #3fb950; flex-shrink: 0;
+    box-shadow: 0 0 6px #3fb950;
+  }
+
+  /* ── Messages ── */
+  #chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+  #chatMessages::-webkit-scrollbar { width: 4px; }
+  #chatMessages::-webkit-scrollbar-thumb { background: rgba(88,166,255,0.25); border-radius: 2px; }
+  .chat-msg {
+    display: flex;
+    gap: 8px;
+    animation: msgIn 0.25s ease;
+  }
+  @keyframes msgIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+  .chat-msg.user { flex-direction: row-reverse; }
+  .chat-bubble {
+    max-width: 82%;
+    padding: 9px 13px;
+    border-radius: 14px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+  .chat-msg.bot .chat-bubble {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.15);
+    color: var(--text, #cdd9e5);
+    border-bottom-left-radius: 4px;
+  }
+  body.light-mode .chat-msg.bot .chat-bubble {
+    background: #f0f4ff;
+    border-color: rgba(88,166,255,0.2);
+    color: #1c2128;
+  }
+  .chat-msg.user .chat-bubble {
+    background: linear-gradient(135deg,#58a6ff,#a78bfa);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .chat-msg-icon {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg,#58a6ff,#a78bfa);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; margin-top: 2px;
+  }
+  .chat-msg.user .chat-msg-icon {
+    background: rgba(88,166,255,0.15);
+    border: 1px solid rgba(88,166,255,0.3);
+    font-size: 11px;
+  }
+
+  /* Typing indicator */
+  .typing-dots span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #58a6ff;
+    margin: 0 2px;
+    animation: typingBounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); opacity:0.4; }
+    30% { transform: translateY(-5px); opacity:1; }
+  }
+
+  /* ── Suggested questions ── */
+  #chatSuggestions {
+    padding: 0 12px 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  .chat-suggestion {
+    font-size: 0.68rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(88,166,255,0.3);
+    background: rgba(88,166,255,0.07);
+    color: #58a6ff;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .chat-suggestion:hover { background: rgba(88,166,255,0.18); transform: translateY(-1px); }
+
+  /* ── Input area ── */
+  #chatInputWrap {
+    padding: 12px 14px;
+    border-top: 1px solid rgba(88,166,255,0.1);
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.15);
+  }
+  body.light-mode #chatInputWrap { background: #f8faff; }
+  #chatInput {
+    flex: 1;
+    background: rgba(88,166,255,0.07);
+    border: 1px solid rgba(88,166,255,0.2);
+    border-radius: 10px;
+    padding: 9px 12px;
+    color: var(--text, #cdd9e5);
+    font-size: 16px; /* iOS: prevents auto-zoom on focus */
+    font-family: 'DM Sans', sans-serif;
+    resize: none;
+    max-height: 80px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.4;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  body.light-mode #chatInput { color: #1c2128; background: #fff; border-color: rgba(88,166,255,0.3); }
+  #chatInput:focus { border-color: rgba(88,166,255,0.5); }
+  #chatInput::placeholder { color: var(--muted, #768390); }
+  #chatSendBtn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#58a6ff,#a78bfa);
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.2s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  #chatSendBtn:hover { opacity: 0.85; transform: scale(1.05); }
+  #chatSendBtn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  #chatSendBtn svg { width: 16px; height: 16px; fill: #fff; }
+</style>
+
+<!-- Launcher button -->
+<button id="chatLauncher" aria-label="Ask me anything">
+  <svg class="icon-open" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/></svg>
+  <svg class="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+</button>
+
+<!-- Chat window -->
+<div id="chatWindow" role="dialog" aria-label="Portfolio chatbot">
+  <div id="chatHeader">
+    <div class="chat-avatar">🤖</div>
+    <div class="chat-title">
+      <strong>Ask Tarun's Portfolio</strong>
+      <span>Powered by Claude AI</span>
+    </div>
+    <div class="chat-status-dot"></div>
+  </div>
+
+  <div id="chatMessages">
+    <div class="chat-msg bot">
+      <div class="chat-msg-icon">🤖</div>
+      <div class="chat-bubble">Hi! I'm Tarun's portfolio assistant. Ask me anything about his experience, skills, projects, or how to get in touch! 👋</div>
+    </div>
+  </div>
+
+  <div id="chatSuggestions">
+    <button class="chat-suggestion">What's his experience?</button>
+    <button class="chat-suggestion">Skills & tools?</button>
+    <button class="chat-suggestion">Current role?</button>
+    <button class="chat-suggestion">Contact info?</button>
+  </div>
+
+  <div id="chatInputWrap">
+    <textarea id="chatInput" placeholder="Ask anything about Tarun..." rows="1"></textarea>
+    <button id="chatSendBtn" aria-label="Send">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var PORTFOLIO_CONTEXT = "Tarun Palthi \u2014 Analytics Leader TP \ud83d\udc4b Welcome to Tarun's Portfolio Why did the analyst break up with the spreadsheet? Too many unresolved issues and zero commitment. \ud83d\udcca\ud83d\ude04 About Experience Impact Skills Certifications Projects Education Reviews Contact Me \ud83c\udf19 About Experience Impact Skills Certifications Projects Education Reviews Contact Me Available for Analytics Leadership Roles Tarun Palthi Analytics Manager & Senior Digital Analytics Leader \u2014 turning complex data into business growth for 7+ years 0 Years Experience 0 Experiments Led $0M+ Annualized Incremental Revenue Get in Touch View my CV LinkedIn &#127911; tap to hear intro Scroll to explore About Data that drives decisions I help organizations turn complex behavioral data into confident business decisions . For over 7 years, I've embedded analytics into the core of product, marketing, and customer experience work. Currently at Verizon , I lead analytics consulting for site optimization and MarTech initiatives \u2014 building experimentation frameworks, designing executive dashboards, and translating A/B test results into roadmap priorities. I've also worked with PwC on financial automation, and started my career at ADP and in healthcare analytics \u2014 giving me a rare blend of digital, financial, and operational data experience. Outside of work, I'm passionate about playing sports (badminton, pickleball, cricket, and table tennis), cooking (Indian, Japanese, and Italian), photography, hiking, and exploring new adventures. Core Expertise Digital Analytics A/B Testing Multivariate Testing Experimentation Strategy Adobe Analytics Google Analytics SQL BigQuery Teradata Python Tableau Power BI Stakeholder Consulting Data Storytelling Executive Readouts Measurement Strategy Experience 7+ Years of Impact-Driven Analytics From healthcare data to Fortune 500 digital strategy \u2014 a continuous journey upward. Analytics Lead / Consultant Engr III \u2013 Data Science \u25cf Current Full-time Verizon \u00b7 \ud83d\udccd Basking Ridge, NJ Jul 2022 \u2013 Present Lead analytics consulting for BAU Site Optimization and MarTech initiatives, partnering with product and marketing teams across RTM, Always-On, and AI&D pods. Design and maintain executive-ready dashboards for A/B, multivariate, and personalization tests using Adobe Analytics. Validate and analyze data via Teradata and GCP BigQuery. Deliver customer journey insights using ContentSquare and Quantum Metrics. Adobe Analytics BigQuery ContentSquare A/B & MVT Testing Teradata SQL Quantum Metrics Data Analytics Consultant Client: Verizon Contract AgreeYa Solutions | Verizon \u00b7 \ud83d\udccd Folsom, CA Sep 2021 \u2013 Jul 2022 Served as analytics consultant for Real-Time Marketing (RTM) and Site Optimization initiatives. Delivered actionable insights and dashboards to senior stakeholders. Queried and stitched data from multiple platforms using SQL (Teradata) to assess digital performance. Developed ad-hoc analyses and scalable reporting solutions in Adobe Analytics. SQL (Teradata) Adobe Analytics RTM Analytics Dashboards Data Analytics Consultant II Digital Operations \u00b7 Client: Verizon Contract Datawin Systems | Verizon \u00b7 \ud83d\udccd Piscataway, NJ Jan 2020 \u2013 Jun 2021 Provided competitive and self-serve analytics insights for Verizon Wireless and FiOS using Adobe Analytics, Tableau, and ThoughtSpot. Identified performance gaps and recommended improvements to analytics platforms. Optimized complex SQL queries in Teradata and supported site search optimization and cross-channel tracking. Adobe Analytics Tableau ThoughtSpot SQL (Teradata) Financial Data Analyst Tax Management Technology \u00b7 Client: PwC Contract Datawin Systems | PwC \u00b7 \ud83d\udccd Piscataway, NJ Jan 2019 \u2013 Aug 2019 Automated financial data workflows using Alteryx, improving processing efficiency and data quality. Built Tableau and Power BI dashboards for financial reporting. Developed ETL scripts and SQL queries for scalable reporting solutions. Implemented RPA using UiPath to reduce manual tasks. Alteryx Power BI UiPath RPA Tableau ETL Data Analytics & BI Consultant Full-time Integra Technologies \u00b7 \ud83d\udccd Wilmington, DE \u00b7 Remote Nov 2017 \u2013 Dec 2018 Built Tableau dashboards and BI reports to support financial and operational decision-making. Analyzed performance metrics using SQL and SAS. Partnered with operations and management teams to translate analytical findings into actionable insights. Tableau SAS SQL Business Intelligence Business Data Analyst Full-time ADP, Inc. \u00b7 \ud83d\udccd Parsippany, NJ Jun 2017 \u2013 Aug 2017 Worked with cross-functional teams in an Agile environment to gather business requirements and deliver analytics solutions. Developed SQL-based datasets and Tableau reports for employee performance analysis. SQL Tableau Agile Data Validation Mainframe DB2 DBA Intern Internship ADP, Inc. \u00b7 \ud83d\udccd Roseland, NJ Jun 2016 \u2013 Aug 2016 Supported the DB2 Performance Team by analyzing query performance and identifying high CPU usage queries using IBM Optim Query Workload Tuner. Provided findings including predicate changes, access path improvements, and query rewrites. IBM DB2 SQL Query Optimization Mainframe Database Administrative Assistant Part-time New Jersey Institute of Technology \u00b7 \ud83d\udccd Newark, NJ Aug 2016 \u2013 Dec 2016 Monitored the university database infrastructure and assisted with routine administrative and optimization tasks. Gained hands-on experience with database operations, identity and access management, and customer support processes. Database Admin IAM DB Optimization Healthcare Data Analyst Part-time Healthcare Pharmacy \u00b7 \ud83d\udccd Bronx, NY Sep 2015 \u2013 Aug 2016 Managed and analyzed pharmacy and patient records to ensure data accuracy and regulatory compliance. Identified operational inefficiencies through data analysis and implemented process improvements to reduce errors and improve workflow efficiency. Healthcare Data Data Quality Process Improvement Impact & Results Analytics that move the needle Key metrics and outcomes delivered throughout my career at enterprise scale. \ud83d\udcb0 $0M+ Annualized Incremental Revenue \u2014 Spearhe";
+
+  var launcher = document.getElementById('chatLauncher');
+  var chatWindow = document.getElementById('chatWindow');
+  var messages = document.getElementById('chatMessages');
+  var input = document.getElementById('chatInput');
+  var sendBtn = document.getElementById('chatSendBtn');
+  var suggestions = document.querySelectorAll('.chat-suggestion');
+  var history = [];
+  var isOpen = false;
+
+  // Toggle chat
+  launcher.addEventListener('click', function() {
+    isOpen = !isOpen;
+    launcher.classList.toggle('open', isOpen);
+    chatWindow.classList.toggle('open', isOpen);
+    if (isOpen) setTimeout(function() { input.focus(); }, 300);
+  });
+
+  // Mobile keyboard: reposition chat window when virtual keyboard opens
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', function() {
+      if (!isOpen) return;
+      var vvh = window.visualViewport.height;
+      var fullH = window.innerHeight;
+      var kbHeight = fullH - vvh;
+      if (kbHeight > 100) {
+        // Keyboard is open — lift the window above keyboard
+        chatWindow.style.bottom = (kbHeight + 10) + 'px';
+        chatWindow.style.maxHeight = (vvh - 100) + 'px';
+      } else {
+        chatWindow.style.bottom = '';
+        chatWindow.style.maxHeight = '';
+      }
+    });
+  }
+
+  // Suggestion chips
+  suggestions.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      sendMessage(btn.textContent.trim());
+    });
+  });
+
+  // Send on Enter (Shift+Enter for newline)
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(input.value.trim());
+    }
+  });
+  sendBtn.addEventListener('click', function() {
+    sendMessage(input.value.trim());
+  });
+
+  // Auto-resize textarea
+  input.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+  });
+
+  function addMessage(role, text) {
+    var msg = document.createElement('div');
+    msg.className = 'chat-msg ' + role;
+    var icon = document.createElement('div');
+    icon.className = 'chat-msg-icon';
+    icon.textContent = role === 'bot' ? '🤖' : '👤';
+    var bubble = document.createElement('div');
+    bubble.className = 'chat-bubble';
+    bubble.textContent = text;
+    msg.appendChild(icon);
+    msg.appendChild(bubble);
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+    return bubble;
+  }
+
+  function addTyping() {
+    var msg = document.createElement('div');
+    msg.className = 'chat-msg bot';
+    msg.id = 'typingIndicator';
+    var icon = document.createElement('div');
+    icon.className = 'chat-msg-icon';
+    icon.textContent = '🤖';
+    var bubble = document.createElement('div');
+    bubble.className = 'chat-bubble typing-dots';
+    bubble.innerHTML = '<span></span><span></span><span></span>';
+    msg.appendChild(icon);
+    msg.appendChild(bubble);
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function removeTyping() {
+    var t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+  }
+
+  async function sendMessage(text) {
+    if (!text) return;
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    // Hide suggestions after first use
+    document.getElementById('chatSuggestions').style.display = 'none';
+
+    addMessage('user', text);
+    history.push({ role: 'user', content: text });
+    addTyping();
+
+    try {
+      var res = await fetch('https://portfolio-chat.palthitarun.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: 'You are a helpful assistant embedded in Tarun Palthi\'s portfolio website. Answer questions about Tarun based on the following portfolio information. Be concise, friendly, and professional. If asked something not in the portfolio, politely say you don\'t have that info but suggest contacting Tarun directly.\n\nPORTFOLIO INFO:\n' + PORTFOLIO_CONTEXT,
+          messages: history
+        })
+      });
+      var data = await res.json();
+      removeTyping();
+      var reply = data.content && data.content[0] ? data.content[0].text : 'Sorry, I had trouble responding. Please try again!';
+      history.push({ role: 'assistant', content: reply });
+      addMessage('bot', reply);
+    } catch(e) {
+      removeTyping();
+      addMessage('bot', 'Oops, something went wrong. Please try again!');
+    }
+    sendBtn.disabled = false;
+    input.focus();
+  }
+})();
+</script>
+
 </body>
 </html>
