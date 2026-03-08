@@ -4657,31 +4657,36 @@ function toggleProj(el) {
     right: 28px;
     width: 56px;
     height: 56px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #58a6ff, #a78bfa);
+    border-radius: 18px;
+    background: linear-gradient(135deg, #58a6ff 0%, #7c6fff 50%, #a78bfa 100%);
     border: none;
-    cursor: pointer;
+    cursor: pointer !important;
     z-index: 99998;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 20px rgba(88,166,255,0.45);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 24px rgba(88,166,255,0.5), 0 0 0 0 rgba(88,166,255,0.3);
+    transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    animation: launcherPulse 3s ease-in-out infinite;
   }
-  #chatLauncher:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(88,166,255,0.6); }
+  @keyframes launcherPulse {
+    0%, 100% { box-shadow: 0 4px 24px rgba(88,166,255,0.5), 0 0 0 0 rgba(88,166,255,0.25); }
+    50% { box-shadow: 0 4px 24px rgba(88,166,255,0.6), 0 0 0 10px rgba(88,166,255,0); }
+  }
+  #chatLauncher.open { animation: none; border-radius: 16px; }
+  #chatLauncher:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 8px 32px rgba(88,166,255,0.65); }
 
-  /* Restore default cursor over all chatbot elements */
-  #chatLauncher, #chatWindow, #chatWindow *,
-  #chatInput, #chatSendBtn, .chat-suggestion {
-    cursor: auto;
+  /* Restore default cursor over all chatbot elements — !important overrides body cursor:none */
+  #chatWindow, #chatWindow * {
+    cursor: auto !important;
   }
   #chatLauncher, #chatSendBtn, .chat-suggestion {
-    cursor: pointer;
+    cursor: pointer !important;
   }
   #chatInput {
-    cursor: text;
+    cursor: text !important;
   }
   #chatLauncher svg { width: 26px; height: 26px; fill: #fff; transition: opacity 0.2s; }
   #chatLauncher .icon-close { display: none; }
@@ -4749,10 +4754,11 @@ function toggleProj(el) {
     flex-shrink: 0;
   }
   #chatHeader .chat-avatar {
-    width: 34px; height: 34px; border-radius: 50%;
+    width: 36px; height: 36px; border-radius: 11px;
     background: linear-gradient(135deg,#58a6ff,#a78bfa);
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
+    flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(88,166,255,0.4);
   }
   #chatHeader .chat-title { flex: 1; }
   #chatHeader .chat-title strong {
@@ -4814,15 +4820,16 @@ function toggleProj(el) {
     border-bottom-right-radius: 4px;
   }
   .chat-msg-icon {
-    width: 26px; height: 26px; border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 9px;
     background: linear-gradient(135deg,#58a6ff,#a78bfa);
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px; flex-shrink: 0; margin-top: 2px;
+    flex-shrink: 0; margin-top: 2px;
+    box-shadow: 0 2px 8px rgba(88,166,255,0.3);
   }
   .chat-msg.user .chat-msg-icon {
-    background: rgba(88,166,255,0.15);
-    border: 1px solid rgba(88,166,255,0.3);
-    font-size: 11px;
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.25);
+    box-shadow: none;
   }
 
   /* Typing indicator */
@@ -4914,18 +4921,35 @@ function toggleProj(el) {
 </style>
 
 <!-- Launcher button -->
-<button id="chatLauncher" aria-label="Ask me anything">
-  <svg class="icon-open" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/></svg>
-  <svg class="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+<button id="chatLauncher" aria-label="Ask anything about Tarun">
+  <!-- Open: modern AI spark icon -->
+  <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <circle cx="9" cy="10" r="1" fill="white" stroke="none"/>
+    <circle cx="12" cy="10" r="1" fill="white" stroke="none"/>
+    <circle cx="15" cy="10" r="1" fill="white" stroke="none"/>
+  </svg>
+  <!-- Close: elegant X -->
+  <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+    <line x1="18" y1="6" x2="6" y2="18"/>
+    <line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
 </button>
 
 <!-- Chat window -->
 <div id="chatWindow" role="dialog" aria-label="Portfolio chatbot">
   <div id="chatHeader">
-    <div class="chat-avatar">🤖</div>
+    <div class="chat-avatar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        <circle cx="9" cy="10" r="1" fill="white" stroke="none"/>
+        <circle cx="12" cy="10" r="1" fill="white" stroke="none"/>
+        <circle cx="15" cy="10" r="1" fill="white" stroke="none"/>
+      </svg>
+    </div>
     <div class="chat-title">
-      <strong>Ask Tarun's Portfolio</strong>
-      <span>Powered by Claude AI</span>
+      <strong>Ask Anything About Tarun ✨</strong>
+      <span>Your personal guide to Tarun's work</span>
     </div>
     <div class="chat-status-dot"></div>
   </div>
@@ -4933,19 +4957,19 @@ function toggleProj(el) {
   <div id="chatMessages">
     <div class="chat-msg bot">
       <div class="chat-msg-icon">🤖</div>
-      <div class="chat-bubble">Hi! I'm Tarun's portfolio assistant. Ask me anything about his experience, skills, projects, or how to get in touch! 👋</div>
+      <div class="chat-bubble">Hey there! 👋 I'm your guide to Tarun's portfolio. Ask me anything — his experience, skills, tools, projects, or how to reach him!</div>
     </div>
   </div>
 
   <div id="chatSuggestions">
-    <button class="chat-suggestion">What's his experience?</button>
+    <button class="chat-suggestion">7+ years of experience 🚀</button>
     <button class="chat-suggestion">Skills & tools?</button>
-    <button class="chat-suggestion">Current role?</button>
-    <button class="chat-suggestion">Contact info?</button>
+    <button class="chat-suggestion">Current role 💼</button>
+    <button class="chat-suggestion">How to reach him 📬</button>
   </div>
 
   <div id="chatInputWrap">
-    <textarea id="chatInput" placeholder="Ask anything about Tarun..." rows="1"></textarea>
+    <textarea id="chatInput" placeholder="What would you like to know?" rows="1"></textarea>
     <button id="chatSendBtn" aria-label="Send">
       <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
     </button>
@@ -4954,7 +4978,6 @@ function toggleProj(el) {
 
 <script>
 (function() {
-  var PORTFOLIO_CONTEXT = "Tarun Palthi \u2014 Analytics Leader TP \ud83d\udc4b Welcome to Tarun's Portfolio Why did the analyst break up with the spreadsheet? Too many unresolved issues and zero commitment. \ud83d\udcca\ud83d\ude04 About Experience Impact Skills Certifications Projects Education Reviews Contact Me \ud83c\udf19 About Experience Impact Skills Certifications Projects Education Reviews Contact Me Available for Analytics Leadership Roles Tarun Palthi Analytics Manager & Senior Digital Analytics Leader \u2014 turning complex data into business growth for 7+ years 0 Years Experience 0 Experiments Led $0M+ Annualized Incremental Revenue Get in Touch View my CV LinkedIn &#127911; tap to hear intro Scroll to explore About Data that drives decisions I help organizations turn complex behavioral data into confident business decisions . For over 7 years, I've embedded analytics into the core of product, marketing, and customer experience work. Currently at Verizon , I lead analytics consulting for site optimization and MarTech initiatives \u2014 building experimentation frameworks, designing executive dashboards, and translating A/B test results into roadmap priorities. I've also worked with PwC on financial automation, and started my career at ADP and in healthcare analytics \u2014 giving me a rare blend of digital, financial, and operational data experience. Outside of work, I'm passionate about playing sports (badminton, pickleball, cricket, and table tennis), cooking (Indian, Japanese, and Italian), photography, hiking, and exploring new adventures. Core Expertise Digital Analytics A/B Testing Multivariate Testing Experimentation Strategy Adobe Analytics Google Analytics SQL BigQuery Teradata Python Tableau Power BI Stakeholder Consulting Data Storytelling Executive Readouts Measurement Strategy Experience 7+ Years of Impact-Driven Analytics From healthcare data to Fortune 500 digital strategy \u2014 a continuous journey upward. Analytics Lead / Consultant Engr III \u2013 Data Science \u25cf Current Full-time Verizon \u00b7 \ud83d\udccd Basking Ridge, NJ Jul 2022 \u2013 Present Lead analytics consulting for BAU Site Optimization and MarTech initiatives, partnering with product and marketing teams across RTM, Always-On, and AI&D pods. Design and maintain executive-ready dashboards for A/B, multivariate, and personalization tests using Adobe Analytics. Validate and analyze data via Teradata and GCP BigQuery. Deliver customer journey insights using ContentSquare and Quantum Metrics. Adobe Analytics BigQuery ContentSquare A/B & MVT Testing Teradata SQL Quantum Metrics Data Analytics Consultant Client: Verizon Contract AgreeYa Solutions | Verizon \u00b7 \ud83d\udccd Folsom, CA Sep 2021 \u2013 Jul 2022 Served as analytics consultant for Real-Time Marketing (RTM) and Site Optimization initiatives. Delivered actionable insights and dashboards to senior stakeholders. Queried and stitched data from multiple platforms using SQL (Teradata) to assess digital performance. Developed ad-hoc analyses and scalable reporting solutions in Adobe Analytics. SQL (Teradata) Adobe Analytics RTM Analytics Dashboards Data Analytics Consultant II Digital Operations \u00b7 Client: Verizon Contract Datawin Systems | Verizon \u00b7 \ud83d\udccd Piscataway, NJ Jan 2020 \u2013 Jun 2021 Provided competitive and self-serve analytics insights for Verizon Wireless and FiOS using Adobe Analytics, Tableau, and ThoughtSpot. Identified performance gaps and recommended improvements to analytics platforms. Optimized complex SQL queries in Teradata and supported site search optimization and cross-channel tracking. Adobe Analytics Tableau ThoughtSpot SQL (Teradata) Financial Data Analyst Tax Management Technology \u00b7 Client: PwC Contract Datawin Systems | PwC \u00b7 \ud83d\udccd Piscataway, NJ Jan 2019 \u2013 Aug 2019 Automated financial data workflows using Alteryx, improving processing efficiency and data quality. Built Tableau and Power BI dashboards for financial reporting. Developed ETL scripts and SQL queries for scalable reporting solutions. Implemented RPA using UiPath to reduce manual tasks. Alteryx Power BI UiPath RPA Tableau ETL Data Analytics & BI Consultant Full-time Integra Technologies \u00b7 \ud83d\udccd Wilmington, DE \u00b7 Remote Nov 2017 \u2013 Dec 2018 Built Tableau dashboards and BI reports to support financial and operational decision-making. Analyzed performance metrics using SQL and SAS. Partnered with operations and management teams to translate analytical findings into actionable insights. Tableau SAS SQL Business Intelligence Business Data Analyst Full-time ADP, Inc. \u00b7 \ud83d\udccd Parsippany, NJ Jun 2017 \u2013 Aug 2017 Worked with cross-functional teams in an Agile environment to gather business requirements and deliver analytics solutions. Developed SQL-based datasets and Tableau reports for employee performance analysis. SQL Tableau Agile Data Validation Mainframe DB2 DBA Intern Internship ADP, Inc. \u00b7 \ud83d\udccd Roseland, NJ Jun 2016 \u2013 Aug 2016 Supported the DB2 Performance Team by analyzing query performance and identifying high CPU usage queries using IBM Optim Query Workload Tuner. Provided findings including predicate changes, access path improvements, and query rewrites. IBM DB2 SQL Query Optimization Mainframe Database Administrative Assistant Part-time New Jersey Institute of Technology \u00b7 \ud83d\udccd Newark, NJ Aug 2016 \u2013 Dec 2016 Monitored the university database infrastructure and assisted with routine administrative and optimization tasks. Gained hands-on experience with database operations, identity and access management, and customer support processes. Database Admin IAM DB Optimization Healthcare Data Analyst Part-time Healthcare Pharmacy \u00b7 \ud83d\udccd Bronx, NY Sep 2015 \u2013 Aug 2016 Managed and analyzed pharmacy and patient records to ensure data accuracy and regulatory compliance. Identified operational inefficiencies through data analysis and implemented process improvements to reduce errors and improve workflow efficiency. Healthcare Data Data Quality Process Improvement Impact & Results Analytics that move the needle Key metrics and outcomes delivered throughout my career at enterprise scale. \ud83d\udcb0 $0M+ Annualized Incremental Revenue \u2014 Spearhe";
 
   var launcher = document.getElementById('chatLauncher');
   var chatWindow = document.getElementById('chatWindow');
@@ -4962,7 +4985,7 @@ function toggleProj(el) {
   var input = document.getElementById('chatInput');
   var sendBtn = document.getElementById('chatSendBtn');
   var suggestions = document.querySelectorAll('.chat-suggestion');
-  var history = [];
+
   var isOpen = false;
 
   // Toggle chat
@@ -5020,7 +5043,11 @@ function toggleProj(el) {
     msg.className = 'chat-msg ' + role;
     var icon = document.createElement('div');
     icon.className = 'chat-msg-icon';
-    icon.textContent = role === 'bot' ? '🤖' : '👤';
+    if (role === 'bot') {
+      icon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><circle cx=\"9\" cy=\"10\" r=\"1\" fill=\"white\" stroke=\"none\"/><circle cx=\"12\" cy=\"10\" r=\"1\" fill=\"white\" stroke=\"none\"/><circle cx=\"15\" cy=\"10\" r=\"1\" fill=\"white\" stroke=\"none\"/></svg>';
+    } else {
+      icon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(88,166,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>';
+    }
     var bubble = document.createElement('div');
     bubble.className = 'chat-bubble';
     bubble.textContent = text;
@@ -5052,41 +5079,151 @@ function toggleProj(el) {
     if (t) t.remove();
   }
 
-  async function sendMessage(text) {
+  // ── Static knowledge base — no API needed ──────────────────────
+  var KB = [
+    {
+      keys: ['hi','hello','hey','howdy','sup','good morning','good afternoon','good evening','start','begin'],
+      answer: "Hey there! 👋 I'm your guide to Tarun's portfolio. I can answer questions about his experience, skills, tools, education, certifications, projects, or how to get in touch. What would you like to know?"
+    },
+    {
+      keys: ['who','tarun','about','tell me','describe','summary','overview','introduce','background'],
+      answer: "Tarun Palthi is an Analytics Manager & Senior Digital Analytics Leader with 7+ years of experience turning complex data into business growth. Currently at Verizon in Basking Ridge, NJ, he leads analytics for site optimization and MarTech initiatives. His expertise spans A/B testing, Adobe Analytics, SQL, Tableau, and stakeholder consulting across digital, financial, and operational analytics."
+    },
+    {
+      keys: ['experience','years','career','history','long','worked','journey','companies'],
+      answer: "Tarun has 7+ years of analytics experience across these roles:\n• Analytics Lead / Consultant Engr III – Data Science at Verizon (Jul 2022–Present)\n• Data Analytics Consultant at AgreeYa Solutions | Verizon (Sep 2021–Jul 2022)\n• Data Analytics Consultant II at Datawin Systems | Verizon (Jan 2020–Jun 2021)\n• Financial Data Analyst at Datawin Systems | PwC (Jan 2019–Aug 2019)\n• Data Analytics & BI Consultant at Integra Technologies (Nov 2017–Dec 2018)\n• Business Data Analyst at ADP, Inc. (Jun 2017–Aug 2017)\n• DB2 DBA Intern at ADP, Inc. (Jun 2016–Aug 2016)"
+    },
+    {
+      keys: ['current','role','job','verizon','now','working','position','title','doing'],
+      answer: "Tarun is currently an Analytics Lead / Consultant Engineer III – Data Science at Verizon in Basking Ridge, NJ (since July 2022). He leads analytics consulting for BAU Site Optimization and MarTech initiatives, partnering with product and marketing teams across RTM, Always-On, and AI&D pods. He designs executive dashboards, validates A/B and MVT test results using Adobe Analytics, Teradata, BigQuery, ContentSquare, and Quantum Metrics."
+    },
+    {
+      keys: ['skill','tool','tech','technology','software','stack','use','know','expert','proficient','good at'],
+      answer: "Tarun's core skills include:\n• Analytics: Adobe Analytics, Google Analytics, ContentSquare, Quantum Metrics\n• Data: SQL, GCP BigQuery, Teradata, Python, SAS, DB2\n• BI & Viz: Tableau, Power BI, ThoughtSpot\n• Testing: A/B Testing, Multivariate Testing, Experimentation Strategy\n• Other: Alteryx, UiPath RPA, ETL, Agile, Mainframe\nHe is rated Expert in SQL & Data, and Advanced in Experimentation, BI & Dashboards, Stakeholder Consulting, and Data Storytelling."
+    },
+    {
+      keys: ['sql','query','database','bigquery','teradata','db2','data engineering'],
+      answer: "SQL is one of Tarun's strongest skills — rated Expert level! He has deep experience with Teradata, GCP BigQuery, and DB2 across all his roles. He's optimized complex SQL queries, built ETL pipelines, developed scalable reporting solutions, and achieved 3x reporting efficiency through SQL query optimization."
+    },
+    {
+      keys: ['adobe','analytics','ga','google analytics','tracking','tagging','contentsquare','quantum'],
+      answer: "Tarun is an expert in Adobe Analytics and has used it across all his Verizon roles to design executive dashboards, validate A/B/MVT test results, and deliver customer journey insights. He also has hands-on experience with Google Analytics (including individual qualification certification), ContentSquare, and Quantum Metrics."
+    },
+    {
+      keys: ['ab test','a/b','experiment','experimentation','mvt','multivariate','testing','personalization'],
+      answer: "Experimentation is one of Tarun's core specialties! He has analyzed 150+ A/B, multivariate, and personalization tests with end-to-end analytics ownership. He builds experimentation frameworks, designs executive dashboards for test results, and translates findings into roadmap priorities — contributing to $500M+ in annualized incremental revenue."
+    },
+    {
+      keys: ['tableau','power bi','dashboard','visualization','report','bi','thoughtspot','qlikview'],
+      answer: "Tarun is proficient in Tableau, Power BI, and ThoughtSpot. He's built 150+ executive dashboards for senior leadership at Verizon, financial reporting dashboards at PwC, and operational BI reports at Integra Technologies. He's certified in Tableau (Tableau 10 for BI and Visual Best Practices courses)."
+    },
+    {
+      keys: ['python','alteryx','rpa','uipath','automation','etl','pipeline'],
+      answer: "Tarun has used Python for data analysis, Alteryx for financial data workflow automation at PwC (also Alteryx Designer Core certified), and UiPath RPA to reduce manual tasks. He's also built ETL scripts and SQL-based pipelines for scalable reporting — achieving 3x reporting efficiency at Verizon."
+    },
+    {
+      keys: ['impact','result','outcome','achievement','revenue','500','metric','accomplish','kpi'],
+      answer: "Tarun's key career achievements include:\n💰 $500M+ Annualized Incremental Revenue — through large-scale experimentation across RTM, Site Optimization, MarTech, Always-On, and AI&D pods\n🧪 150+ Experiments Analyzed — A/B, multivariate, and personalization tests\n📊 150+ Executive Dashboards built for Verizon senior leadership\n⚡ 3x Reporting Efficiency — through SQL query optimization and automated workflows"
+    },
+    {
+      keys: ['education','degree','university','college','study','studied','graduated','gpa','master','mba','ms'],
+      answer: "Tarun has a strong academic foundation:\n🎓 MBA — New England College, Henniker, NH (2020–2022) | GPA: 3.9/4.0\n💻 MS in Computer & Information Science — NJIT, Newark, NJ (2015–2016) | GPA: 3.9/4.0\n⚙️ B.Tech in Computer Science Engineering — VNR VJIET, Hyderabad, India (2011–2015) | GPA: 3.8/4.0"
+    },
+    {
+      keys: ['certification','certified','certificate','course','license'],
+      answer: "Tarun holds 20+ certifications including:\n• Contentsquare Certified (2021)\n• SQL for Data Science with Google BigQuery (Udemy)\n• Alteryx Designer Core\n• Tableau 10 for Business Intelligence\n• Advanced SQL for Data Scientists (LinkedIn)\n• Google Analytics Individual Qualification\n• Advanced Google Analytics\n• AWS Data Analytics & Amazon Redshift\n• QlikView, Salesforce, Axure RP for UX Design\n• Scrum Master certification\n• Introduction to R (DataCamp)\n• Business Analyst (ExpertRating)"
+    },
+    {
+      keys: ['contact','email','reach','hire','connect','touch','phone','call','number','schedule','meeting'],
+      answer: "You can reach Tarun via:\n📧 Email: palthitarun@gmail.com\n📞 Phone: (201) 744-4259\n📅 Schedule a Meeting — link in the Contact section\n🔗 LinkedIn — linked in the nav bar\n🌐 about.me — also linked in the Contact section"
+    },
+    {
+      keys: ['linkedin','about.me','social','profile','online','link'],
+      answer: "You can find Tarun on LinkedIn (link in the nav bar at the top) and on about.me (linked in the Contact section). He's also reachable at palthitarun@gmail.com or by phone at (201) 744-4259."
+    },
+    {
+      keys: ['available','open','looking','opportunity','hire','recruit','role','job','analytics manager','leadership'],
+      answer: "Yes! Tarun is currently open to Analytics Manager, Senior Analytics Manager, and Digital Analytics Leadership roles where he can lead experimentation strategy and drive data-informed growth. Reach out at palthitarun@gmail.com or (201) 744-4259 to start a conversation! 🚀"
+    },
+    {
+      keys: ['location','city','state','based','live','where','nj','new jersey','basking ridge','newark'],
+      answer: "Tarun is based in New Jersey, USA. He currently works at Verizon's office in Basking Ridge, NJ. He studied at NJIT in Newark, NJ and got his MBA from New England College in Henniker, NH."
+    },
+    {
+      keys: ['pwc','pricewaterhouse','financial','tax','accounting','finance'],
+      answer: "At PwC (via Datawin Systems, Jan–Aug 2019), Tarun worked as a Financial Data Analyst on Tax Management Technology. He automated financial workflows with Alteryx, built Tableau & Power BI dashboards for financial reporting, developed ETL scripts and SQL queries for scalable reporting, and implemented UiPath RPA to reduce manual tasks."
+    },
+    {
+      keys: ['adp','intern','internship','mainframe','payroll'],
+      answer: "Tarun started his career at ADP with two roles — a DB2 DBA Intern (Summer 2016) analyzing query performance using IBM Optim Query Workload Tuner, and a Business Data Analyst (Summer 2017) building SQL datasets and Tableau reports for employee performance analysis in an Agile environment."
+    },
+    {
+      keys: ['integra','integra technologies','healthcare','health','clinical','wilmington'],
+      answer: "At Integra Technologies (Nov 2017–Dec 2018), Tarun worked as a Data Analytics & BI Consultant building Tableau dashboards and BI reports for financial and operational decision-making. He analyzed performance metrics using SQL and SAS, and partnered with operations teams to translate findings into actionable insights."
+    },
+    {
+      keys: ['agreeya','folsom','california','rtm','real time marketing'],
+      answer: "At AgreeYa Solutions (Sep 2021–Jul 2022), Tarun served as an analytics consultant for Verizon's Real-Time Marketing (RTM) and Site Optimization initiatives. He delivered insights and dashboards to senior stakeholders, queried data using SQL (Teradata), and developed scalable reporting in Adobe Analytics."
+    },
+    {
+      keys: ['hobby','hobbies','interest','outside','personal','sport','fun','life','cook','cooking','photography','hiking'],
+      answer: "Outside of work, Tarun is passionate about:\n🏸 Sports: Badminton, pickleball, cricket, and table tennis\n🍳 Cooking: Indian, Japanese, and Italian cuisine\n📷 Photography\n🥾 Hiking\n🌍 Exploring new adventures!"
+    },
+    {
+      keys: ['hindi','telugu','english','language','speak','multilingual','tongue','fluent'],
+      answer: "Tarun is fluent in English, Hindi, and Telugu! This multilingual ability helps him communicate effectively with diverse stakeholders — a great asset for consulting and leadership roles."
+    },
+    {
+      keys: ['salary','rate','compensation','pay','charge','cost','fee','budget'],
+      answer: "For compensation discussions, please reach out to Tarun directly at palthitarun@gmail.com or (201) 744-4259. He's happy to discuss details privately!"
+    },
+    {
+      keys: ['thank','thanks','awesome','great','nice','cool','perfect','helpful','wonderful','excellent'],
+      answer: "You're welcome! 😊 Feel free to ask anything else about Tarun's background. You can also reach him directly at palthitarun@gmail.com or through the Contact section at the bottom of this page!"
+    },
+    {
+      keys: ['aws','amazon','cloud','redshift','gcp','google cloud','azure'],
+      answer: "Tarun has cloud analytics experience including GCP BigQuery (used daily at Verizon) and AWS (certified in Amazon Redshift and AWS Data Analytics via LinkedIn Learning). He's comfortable working with cloud data platforms for large-scale querying and reporting."
+    },
+    {
+      keys: ['scrum','agile','project management','sprint','kanban'],
+      answer: "Tarun is a certified Scrum Master (International Scrum Institute) and has hands-on Agile experience from his time at ADP. He's comfortable working in sprint-based environments and cross-functional team settings."
+    },
+    {
+      keys: ['martech','marketing technology','rtm','always on','site optimization','pod'],
+      answer: "Tarun has deep MarTech and site optimization experience at Verizon — working across RTM (Real-Time Marketing), Always-On, and AI&D pods. He partners with product and marketing teams to design experimentation frameworks, validate test results, and build executive dashboards that drive conversion and revenue."
+    }
+  ];
+
+  function getBotReply(text) {
+    var lower = text.toLowerCase();
+    // Find best matching KB entry by counting keyword matches
+    var best = null, bestScore = 0;
+    KB.forEach(function(entry) {
+      var score = 0;
+      entry.keys.forEach(function(k) { if (lower.includes(k)) score++; });
+      if (score > bestScore) { bestScore = score; best = entry; }
+    });
+    if (best && bestScore > 0) return best.answer;
+    return "Great question! I don't have specific details on that, but Tarun would love to answer personally. Reach out at palthitarun@gmail.com or use the Contact section at the bottom of this page. He's always happy to chat! 😊";
+  }
+
+  function sendMessage(text) {
     if (!text) return;
     input.value = '';
     input.style.height = 'auto';
     sendBtn.disabled = true;
-
-    // Hide suggestions after first use
     document.getElementById('chatSuggestions').style.display = 'none';
-
     addMessage('user', text);
-    history.push({ role: 'user', content: text });
     addTyping();
-
-    try {
-      var res = await fetch('https://portfolio-chat.palthitarun.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: 'You are a helpful assistant embedded in Tarun Palthi\'s portfolio website. Answer questions about Tarun based on the following portfolio information. Be concise, friendly, and professional. If asked something not in the portfolio, politely say you don\'t have that info but suggest contacting Tarun directly.\n\nPORTFOLIO INFO:\n' + PORTFOLIO_CONTEXT,
-          messages: history
-        })
-      });
-      var data = await res.json();
+    // Simulate a short thinking delay for natural feel
+    setTimeout(function() {
       removeTyping();
-      var reply = data.content && data.content[0] ? data.content[0].text : 'Sorry, I had trouble responding. Please try again!';
-      history.push({ role: 'assistant', content: reply });
+      var reply = getBotReply(text);
       addMessage('bot', reply);
-    } catch(e) {
-      removeTyping();
-      addMessage('bot', 'Oops, something went wrong. Please try again!');
-    }
-    sendBtn.disabled = false;
-    input.focus();
+      sendBtn.disabled = false;
+      input.focus();
+    }, 600 + Math.random() * 400);
   }
 })();
 </script>
