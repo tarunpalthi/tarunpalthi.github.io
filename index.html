@@ -1120,11 +1120,29 @@
   .bar-chart-outer {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    /* Firefox + modern browsers */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(88,166,255,0.5) transparent;
+    padding-bottom: 6px;
   }
+  /* Chrome / Safari / Edge */
   .bar-chart-outer::-webkit-scrollbar { height: 4px; }
   .bar-chart-outer::-webkit-scrollbar-track { background: transparent; }
-  .bar-chart-outer::-webkit-scrollbar-thumb { background: rgba(88,166,255,0.35); border-radius: 2px; }
-  .bar-chart-outer::-webkit-scrollbar-thumb:hover { background: rgba(88,166,255,0.65); }
+  .bar-chart-outer::-webkit-scrollbar-thumb { background: rgba(88,166,255,0.5); border-radius: 4px; }
+  .bar-chart-outer::-webkit-scrollbar-thumb:hover { background: rgba(88,166,255,0.8); }
+  /* iOS Safari — hide the native grey bar, use padding as visual cue instead */
+  @supports (-webkit-touch-callout: none) {
+    .bar-chart-outer {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .bar-chart-outer::-webkit-scrollbar { display: none; }
+    /* Show a subtle fade on right edge as scroll hint instead */
+    .bar-chart-outer {
+      -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+      mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    }
+  }
 
   /* SKILLS RADAR */
   #skills-section {
