@@ -1083,10 +1083,8 @@
     transition: opacity 0.2s ease, transform 0.2s ease;
     z-index: 9999;
   }
-  .bar-group:hover .bar-hover-label {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  /* hover label handled by JS floatTip instead */
+  .bar-group:hover .bar-hover-label { opacity: 0; }
   .bar-x-axis {
     display: flex;
     gap: 10px;
@@ -4475,8 +4473,7 @@ function toggleProj(el) {
 
 
 
-  // ── Touch support for bar chart tooltips (mobile) ─────────────
-  // Use a single floating tooltip div to escape the overflow:auto container
+  // ── Bar chart tooltips — hover (desktop) + touch (mobile) ───────
   var floatTip = document.createElement('div');
   floatTip.id = 'barFloatTip';
   floatTip.style.cssText = [
@@ -4492,40 +4489,47 @@ function toggleProj(el) {
     'border:1px solid rgba(255,255,255,0.15)',
     'pointer-events:none',
     'opacity:0',
-    'transition:opacity 0.2s',
+    'transition:opacity 0.15s',
     'white-space:nowrap',
     'transform:translateX(-50%)'
   ].join(';');
   document.body.appendChild(floatTip);
   var tipTimer = null;
 
+  function showTip(group) {
+    document.querySelectorAll('.bar').forEach(function(b) { b.style.filter = ''; });
+    var bar = group.querySelector('.bar');
+    if (bar) bar.style.filter = 'brightness(1.35) drop-shadow(0 -8px 18px currentColor)';
+    var label = group.querySelector('.bar-hover-label');
+    var labelText = label ? label.textContent.trim() : '';
+    var labelColor = label ? label.style.color : '#cdd9e5';
+    if (!labelText) return;
+    var rect = group.getBoundingClientRect();
+    floatTip.textContent = labelText;
+    floatTip.style.color = labelColor;
+    floatTip.style.left = (rect.left + rect.width / 2) + 'px';
+    floatTip.style.top = (rect.top - 14) + 'px';
+    floatTip.style.opacity = '1';
+    if (tipTimer) clearTimeout(tipTimer);
+  }
+
+  function hideTip(group, delay) {
+    tipTimer = setTimeout(function() {
+      floatTip.style.opacity = '0';
+      if (group) {
+        var bar = group.querySelector('.bar');
+        if (bar) bar.style.filter = '';
+      }
+    }, delay || 0);
+  }
+
   document.querySelectorAll('.bar-group').forEach(function(group) {
-    group.addEventListener('touchstart', function(e) {
-      // Reset all bar glows
-      document.querySelectorAll('.bar').forEach(function(b) { b.style.filter = ''; });
-      // Glow tapped bar
-      var bar = group.querySelector('.bar');
-      if (bar) bar.style.filter = 'brightness(1.35) drop-shadow(0 -8px 18px currentColor)';
-      // Get label text from the hover label span
-      var label = group.querySelector('.bar-hover-label');
-      var labelText = label ? label.textContent.trim() : '';
-      var labelColor = label ? label.style.color : '#cdd9e5';
-      if (!labelText) return;
-      // Position float tip above the tapped bar
-      var rect = group.getBoundingClientRect();
-      var tipX = rect.left + rect.width / 2;
-      var tipY = rect.top - 10;
-      floatTip.textContent = labelText;
-      floatTip.style.color = labelColor;
-      floatTip.style.left = tipX + 'px';
-      floatTip.style.top = tipY + 'px';
-      floatTip.style.opacity = '1';
-      if (tipTimer) clearTimeout(tipTimer);
-      tipTimer = setTimeout(function() {
-        floatTip.style.opacity = '0';
-        document.querySelectorAll('.bar').forEach(function(b) { b.style.filter = ''; });
-      }, 1400);
-    }, { passive: true });
+    // Desktop: hover
+    group.addEventListener('mouseenter', function() { showTip(group); });
+    group.addEventListener('mouseleave', function() { hideTip(group, 0); });
+    // Mobile: tap
+    group.addEventListener('touchstart', function() { showTip(group); }, { passive: true });
+    group.addEventListener('touchend',   function() { hideTip(group, 1400); }, { passive: true });
   });
 
   // Nav click sounds remain
