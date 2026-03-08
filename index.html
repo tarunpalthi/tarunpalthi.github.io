@@ -164,10 +164,8 @@
     -webkit-backdrop-filter: blur(20px);
     background: rgba(3,7,18,0.6);
     border-bottom: 1px solid var(--border);
-    transition: all 0.3s;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
-  /* Chrome Android: backdrop-filter creates stacking context that hides fixed children.
-     Use solid bg on mobile to avoid this — progress bar stays visible. */
   @media (max-width: 900px) {
     nav {
       backdrop-filter: none;
@@ -4583,12 +4581,13 @@ function toggleProj(el) {
   var bar = document.getElementById("scrollProgress");
   function updateBar() {
     if (!bar) return;
-    var scrolled = window.pageYOffset || window.scrollY || 0;
-    var total = document.body.scrollHeight - window.innerHeight;
+    var scrolled = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0;
+    var total = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) - window.innerHeight;
     bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + "%";
   }
   window.addEventListener("scroll",    updateBar, {passive:true});
   window.addEventListener("touchmove", updateBar, {passive:true});
+  window.addEventListener("touchstart",updateBar, {passive:true});
   window.addEventListener("resize",    updateBar, {passive:true});
   document.addEventListener("DOMContentLoaded", updateBar);
   updateBar();
