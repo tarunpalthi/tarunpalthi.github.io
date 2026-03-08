@@ -1102,6 +1102,9 @@
     line-height: 1.35;
     min-width: 0;
   }
+  /* Swipe hint hidden on desktop by default */
+  .bar-chart-scroll-hint { display: none; }
+
   @media (max-width: 700px) {
     .bar-chart-scroll-hint {
       display: flex;
@@ -1112,17 +1115,18 @@
       margin-bottom: 10px;
       opacity: 0.7;
     }
-    .bar-chart-outer {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      cursor: grab;
-    }
-    .bar-chart-outer::-webkit-scrollbar { display: none; }
     .bar-chart-inner {
       min-width: 560px;
     }
   }
+  .bar-chart-outer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .bar-chart-outer::-webkit-scrollbar { height: 4px; }
+  .bar-chart-outer::-webkit-scrollbar-track { background: transparent; }
+  .bar-chart-outer::-webkit-scrollbar-thumb { background: rgba(88,166,255,0.35); border-radius: 2px; }
+  .bar-chart-outer::-webkit-scrollbar-thumb:hover { background: rgba(88,166,255,0.65); }
 
   /* SKILLS RADAR */
   #skills-section {
