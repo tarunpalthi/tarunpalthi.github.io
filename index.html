@@ -1031,6 +1031,7 @@
     height: 100%;
     gap: 5px;
     min-width: 0;
+    position: relative;
   }
   .bar {
     width: 100%;
@@ -1065,23 +1066,22 @@
   .bar-group { position: relative; }
   .bar-hover-label {
     position: absolute;
-    top: -28px;
+    top: -32px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(4px);
     font-size: 0.6rem;
     font-weight: 700;
     font-family: 'Syne', sans-serif;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    padding: 2px 6px;
+    padding: 3px 8px;
     border-radius: 4px;
-    background: rgba(22,27,34,0.85);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(22,27,34,0.95);
+    border: 1px solid rgba(255,255,255,0.12);
     backdrop-filter: blur(4px);
     transition: opacity 0.2s ease, transform 0.2s ease;
-    transform: translateX(-50%) translateY(4px);
-    z-index: 10;
+    z-index: 9999;
   }
   .bar-group:hover .bar-hover-label {
     opacity: 1;
@@ -4473,6 +4473,33 @@ function toggleProj(el) {
   }
 
 
+
+
+  // ── Touch support for bar chart tooltips (mobile) ─────────────
+  document.querySelectorAll('.bar-group').forEach(function(group) {
+    group.addEventListener('touchstart', function() {
+      document.querySelectorAll('.bar-hover-label').forEach(function(l) {
+        l.style.opacity = '0';
+        l.style.transform = 'translateX(-50%) translateY(4px)';
+      });
+      document.querySelectorAll('.bar').forEach(function(b) { b.style.filter = ''; });
+      var label = group.querySelector('.bar-hover-label');
+      if (label) {
+        label.style.opacity = '1';
+        label.style.transform = 'translateX(-50%) translateY(0)';
+      }
+      var bar = group.querySelector('.bar');
+      if (bar) bar.style.filter = 'brightness(1.35) drop-shadow(0 -8px 18px currentColor)';
+    }, { passive: true });
+    group.addEventListener('touchend', function() {
+      setTimeout(function() {
+        var label = group.querySelector('.bar-hover-label');
+        if (label) { label.style.opacity = '0'; label.style.transform = 'translateX(-50%) translateY(4px)'; }
+        var bar = group.querySelector('.bar');
+        if (bar) bar.style.filter = '';
+      }, 1400);
+    }, { passive: true });
+  });
 
   // Nav click sounds remain
 
