@@ -5086,7 +5086,7 @@ function toggleProj(el) {
       answer: "Hey there! 👋 I'm your guide to Tarun's portfolio. I can answer questions about his experience, skills, tools, education, certifications, projects, or how to get in touch. What would you like to know?"
     },
     {
-      keys: ['who','tarun','about','tell me','describe','summary','overview','introduce','background'],
+      keys: ['who is tarun','tell me about tarun','describe tarun','tarun summary','tarun overview','introduce tarun','tarun background','about tarun'],
       answer: "Tarun Palthi is an Analytics Manager & Senior Digital Analytics Leader with 7+ years of experience turning complex data into business growth. Currently at Verizon in Basking Ridge, NJ, he leads analytics for site optimization and MarTech initiatives. His expertise spans A/B testing, Adobe Analytics, SQL, Tableau, and stakeholder consulting across digital, financial, and operational analytics."
     },
     {
@@ -5182,6 +5182,10 @@ function toggleProj(el) {
       answer: "You're welcome! 😊 Feel free to ask anything else about Tarun's background. You can also reach him directly at palthitarun@gmail.com or through the Contact section at the bottom of this page!"
     },
     {
+      keys: ['date of birth','dob','birthday','born','age','personal info','private','marital','married','family','wife','husband','children','address','home'],
+      answer: "That's personal information Tarun hasn't shared publicly on his portfolio. For professional inquiries, feel free to reach out at palthitarun@gmail.com or (201) 744-4259. He's happy to connect! 😊"
+    },
+    {
       keys: ['aws','amazon','cloud','redshift','gcp','google cloud','azure'],
       answer: "Tarun has cloud analytics experience including GCP BigQuery (used daily at Verizon) and AWS (certified in Amazon Redshift and AWS Data Analytics via LinkedIn Learning). He's comfortable working with cloud data platforms for large-scale querying and reporting."
     },
@@ -5197,14 +5201,24 @@ function toggleProj(el) {
 
   function getBotReply(text) {
     var lower = text.toLowerCase();
-    // Find best matching KB entry by counting keyword matches
+    var words = lower.split(/\s+/);
     var best = null, bestScore = 0;
+
     KB.forEach(function(entry) {
       var score = 0;
-      entry.keys.forEach(function(k) { if (lower.includes(k)) score++; });
+      entry.keys.forEach(function(k) {
+        // Phrase match scores higher than single word match
+        if (lower.includes(k)) {
+          score += k.split(' ').length > 1 ? 3 : 1;
+        }
+      });
       if (score > bestScore) { bestScore = score; best = entry; }
     });
-    if (best && bestScore > 0) return best.answer;
+
+    // Require a minimum score to avoid false positives
+    // Single-word key matches need score >= 2, phrase matches score >= 3
+    var minScore = words.length <= 3 ? 2 : 1;
+    if (best && bestScore >= minScore) return best.answer;
     return "Great question! I don't have specific details on that, but Tarun would love to answer personally. Reach out at palthitarun@gmail.com or use the Contact section at the bottom of this page. He's always happy to chat! 😊";
   }
 
