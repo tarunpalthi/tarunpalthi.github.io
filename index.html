@@ -4654,23 +4654,67 @@ function toggleProj(el) {
     position: fixed;
     bottom: calc(28px + env(safe-area-inset-bottom, 0px));
     right: 28px;
-    width: 56px;
-    height: 56px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #58a6ff 0%, #7c6fff 50%, #a78bfa 100%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #58a6ff 0%, #a78bfa 100%);
     border: none;
     cursor: grab !important;
     z-index: 99998;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 24px rgba(88,166,255,0.5), 0 0 0 0 rgba(88,166,255,0.3);
+    box-shadow: 0 4px 20px rgba(37,99,235,0.6), 0 0 0 0 rgba(37,99,235,0.3);
     transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
     -webkit-tap-highlight-color: transparent;
     touch-action: none;
     animation: launcherPulse 3s ease-in-out infinite;
     user-select: none;
     -webkit-user-select: none;
+  }
+  /* Icons stacked on top of each other inside the button */
+  /* Tooltip label on hover — sits to the LEFT of the button */
+  #chatLauncher::after {
+    content: '💡 I know things his résumé won'\''t tell you';
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 10px);
+    transform: translateY(-50%);
+    background: rgba(13,17,23,0.92);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: #cdd9e5;
+    font-size: 0.68rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  /* Arrow pointing right toward the button */
+  #chatLauncher:not(.open):not(.dragging):hover::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 4px);
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-left-color: rgba(88,166,255,0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  #chatLauncher:not(.open):not(.dragging):hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-4px);
+  }
+  #chatLauncher:not(.open):not(.dragging):hover::before {
+    opacity: 1;
   }
   #chatLauncher.dragging {
     cursor: grabbing !important;
@@ -4701,6 +4745,15 @@ function toggleProj(el) {
   @keyframes launcherPulse {
     0%, 100% { box-shadow: 0 4px 24px rgba(88,166,255,0.5), 0 0 0 0 rgba(88,166,255,0.25); }
     50% { box-shadow: 0 4px 24px rgba(88,166,255,0.6), 0 0 0 10px rgba(88,166,255,0); }
+  }
+  /* Launcher pulse glow */
+  @keyframes closeSpinIn {
+    0%   { transform: rotate(-60deg) scale(0.3); opacity: 0; }
+    65%  { transform: rotate(8deg) scale(1.1); opacity: 1; }
+    100% { transform: rotate(0deg) scale(1); opacity: 1; }
+  }
+  #chatLauncher.open .icon-close {
+    animation: closeSpinIn 0.35s cubic-bezier(.34,1.56,.64,1) forwards;
   }
   #chatLauncher.open { animation: none; border-radius: 16px; }
   #chatLauncher:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 8px 32px rgba(88,166,255,0.65); }
@@ -4734,10 +4787,17 @@ function toggleProj(el) {
   #chatInput {
     cursor: text !important;
   }
-  #chatLauncher svg { width: 26px; height: 26px; fill: #fff; transition: opacity 0.2s; }
+  #chatLauncher svg { width: 100%; height: 100%; transition: opacity 0.2s; }
+  #chatLauncher .icon-open,
+  #chatLauncher .icon-close {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
   #chatLauncher .icon-close { display: none; }
   #chatLauncher.open .icon-open { display: none; }
   #chatLauncher.open .icon-close { display: block; }
+  #chatLauncher.open #chatNotifDot { display: none; }
 
   /* ── Chat window ── */
   #chatWindow {
@@ -4967,18 +5027,20 @@ function toggleProj(el) {
 </style>
 
 <!-- Launcher button -->
-<button id="chatLauncher" aria-label="Ask anything about Tarun">
-  <!-- Open: modern AI spark icon -->
-  <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    <circle cx="9" cy="10" r="1" fill="white" stroke="none"/>
-    <circle cx="12" cy="10" r="1" fill="white" stroke="none"/>
-    <circle cx="15" cy="10" r="1" fill="white" stroke="none"/>
+<button id="chatLauncher" aria-label="Chat with Tarun's AI assistant">
+  <!-- Notification dot -->
+  <span id="chatNotifDot" style="position:absolute;top:2px;right:2px;width:13px;height:13px;background:#3fb950;border-radius:50%;border:2px solid #0d1117;z-index:2;box-shadow:0 0 6px rgba(63,185,80,0.8);"></span>
+  <!-- Open state: friendly chat bubble -->
+  <svg class="icon-open" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="white"/>
+    <circle cx="8" cy="11" r="1.2" fill="#58a6ff"/>
+    <circle cx="12" cy="11" r="1.2" fill="#58a6ff"/>
+    <circle cx="16" cy="11" r="1.2" fill="#58a6ff"/>
   </svg>
-  <!-- Close: elegant X -->
-  <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-    <line x1="18" y1="6" x2="6" y2="18"/>
-    <line x1="6" y1="6" x2="18" y2="18"/>
+  <!-- Close state: clear X so user knows it closes the chat -->
+  <svg class="icon-close" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <line x1="6" y1="6" x2="18" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="18" y1="6" x2="6" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
   </svg>
 </button>
 
@@ -4986,11 +5048,11 @@ function toggleProj(el) {
 <div id="chatWindow" role="dialog" aria-label="Portfolio chatbot">
   <div id="chatHeader">
     <div class="chat-avatar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        <circle cx="9" cy="10" r="1" fill="white" stroke="none"/>
-        <circle cx="12" cy="10" r="1" fill="white" stroke="none"/>
-        <circle cx="15" cy="10" r="1" fill="white" stroke="none"/>
+      <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="white"/>
+        <circle cx="8" cy="11" r="1.2" fill="#58a6ff"/>
+        <circle cx="12" cy="11" r="1.2" fill="#58a6ff"/>
+        <circle cx="16" cy="11" r="1.2" fill="#58a6ff"/>
       </svg>
     </div>
     <div class="chat-title">
@@ -5013,10 +5075,11 @@ function toggleProj(el) {
   </div>
 
   <div id="chatSuggestions">
-    <button class="chat-suggestion">7+ years of experience 🚀</button>
-    <button class="chat-suggestion">Skills & tools?</button>
-    <button class="chat-suggestion">Current role 💼</button>
-    <button class="chat-suggestion">How to reach him 📬</button>
+    <button class="chat-suggestion">💰 $500M revenue — how?</button>
+    <button class="chat-suggestion">🧪 What makes his experiments work?</button>
+    <button class="chat-suggestion">🚀 What can he do that others can't?</button>
+    <button class="chat-suggestion">🎯 What role is he looking for?</button>
+    <button class="chat-suggestion">⚡ Impress me in 30 seconds</button>
   </div>
 
   <div id="chatInputWrap">
@@ -5060,7 +5123,8 @@ function toggleProj(el) {
   var isDragging = false;
   var dragStartX, dragStartY, launcherStartX, launcherStartY;
   var dragMoved = false;
-  var DRAG_THRESHOLD = 6; // px before we treat as drag not click
+  var DRAG_THRESHOLD = 6;   // mouse: 6px
+  var TOUCH_THRESHOLD = 12;  // touch: larger to avoid false drags
 
   function getLauncherPos() {
     var rect = launcher.getBoundingClientRect();
@@ -5076,7 +5140,6 @@ function toggleProj(el) {
     launcher.style.bottom = 'auto';
     launcher.style.left = x + 'px';
     launcher.style.top = y + 'px';
-    // Keep chat window anchored near launcher
     repositionChatWindow(x, y);
   }
 
@@ -5124,7 +5187,6 @@ function toggleProj(el) {
     launcherStartY = pos.y;
     launcher.classList.add('dragging');
     launcher.style.animation = 'none';
-    dragHint.classList.remove('visible');
     e.preventDefault();
   });
 
@@ -5132,7 +5194,13 @@ function toggleProj(el) {
     if (!isDragging) return;
     var dx = e.clientX - dragStartX;
     var dy = e.clientY - dragStartY;
-    if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) dragMoved = true;
+    if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
+      dragMoved = true;
+      var rect = launcher.getBoundingClientRect();
+      dragHint.style.left = (rect.left + launcher.offsetWidth/2 - 40) + 'px';
+      dragHint.style.top = (rect.top - 30) + 'px';
+      dragHint.classList.add('visible');
+    }
     if (dragMoved) setLauncherPos(launcherStartX + dx, launcherStartY + dy);
   });
 
@@ -5141,6 +5209,7 @@ function toggleProj(el) {
     isDragging = false;
     launcher.classList.remove('dragging');
     launcher.style.animation = '';
+    dragHint.classList.remove('visible');
     if (!dragMoved) {
       // It was a click, not a drag — toggle chat
       playSpaceOpen();
@@ -5162,10 +5231,12 @@ function toggleProj(el) {
   });
 
   // TOUCH drag
+  var touchStartTime = 0;
   launcher.addEventListener('touchstart', function(e) {
     var t = e.touches[0];
     isDragging = true;
     dragMoved = false;
+    touchStartTime = Date.now();
     var pos = getLauncherPos();
     dragStartX = t.clientX;
     dragStartY = t.clientY;
@@ -5179,7 +5250,7 @@ function toggleProj(el) {
     var t = e.touches[0];
     var dx = t.clientX - dragStartX;
     var dy = t.clientY - dragStartY;
-    if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
+    if (Math.abs(dx) > TOUCH_THRESHOLD || Math.abs(dy) > TOUCH_THRESHOLD) {
       dragMoved = true;
       setLauncherPos(launcherStartX + dx, launcherStartY + dy);
       e.preventDefault();
@@ -5190,7 +5261,11 @@ function toggleProj(el) {
     if (!isDragging) return;
     isDragging = false;
     launcher.classList.remove('dragging');
-    if (!dragMoved) {
+    var elapsed = Date.now() - touchStartTime;
+    // Treat as click if: didn't move much AND tap was quick (< 300ms)
+    var isTap = !dragMoved || elapsed < 300;
+    if (isTap) {
+      dragMoved = false;
       playSpaceOpen();
       isOpen = !isOpen;
       launcher.classList.toggle('open', isOpen);
@@ -5347,7 +5422,7 @@ function toggleProj(el) {
     var icon = document.createElement('div');
     icon.className = 'chat-msg-icon';
     if (role === 'bot') {
-      icon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><circle cx=\"9\" cy=\"10\" r=\"1\" fill=\"white\" stroke=\"none\"/><circle cx=\"12\" cy=\"10\" r=\"1\" fill=\"white\" stroke=\"none\"/><circle cx=\"15\" cy=\"10\" r=\"1\" fill=\"white\" stroke=\"none\"/></svg>';
+      icon.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d=\"M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z\" fill=\"white\"/><circle cx=\"8\" cy=\"11\" r=\"1.2\" fill=\"#58a6ff\"/><circle cx=\"12\" cy=\"11\" r=\"1.2\" fill=\"#58a6ff\"/><circle cx=\"16\" cy=\"11\" r=\"1.2\" fill=\"#58a6ff\"/></svg>';
     } else {
       icon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(88,166,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>';
     }
@@ -5532,7 +5607,15 @@ function toggleProj(el) {
     return "Great question! I don't have specific details on that, but Tarun would love to answer personally. Reach out at palthitarun@gmail.com or use the Contact section at the bottom of this page. He's always happy to chat! 😊";
   }
 
-  function sendMessage(text) {
+  // Conversation history for multi-turn context
+  var chatHistory = [];
+
+  // Portfolio context for Claude
+  var PORTFOLIO_CONTEXT = 'You are a helpful assistant embedded in Tarun Palthi\'s portfolio website. Answer questions about Tarun based on the info below. Be concise, warm, and conversational — like a knowledgeable friend. Keep responses under 120 words. If asked something not covered, suggest contacting Tarun at palthitarun@gmail.com.\n\nABOUT: Analytics Manager & Senior Digital Analytics Leader, 7+ years experience. Currently Analytics Lead / Consultant Engr III at Verizon, Basking Ridge NJ (Jul 2022-Present). Previously AgreeYa Solutions|Verizon (2021-2022), Datawin Systems|Verizon (2020-2021), Datawin Systems|PwC financial automation (2019), Integra Technologies BI consultant (2017-2018), ADP Business Data Analyst (2017), ADP DB2 DBA Intern (2016), Healthcare Data Analyst (2015-2016).\n\nSKILLS: Expert: Adobe Analytics, SQL/BigQuery/Teradata, A/B & MVT Testing. Advanced: Tableau/Power BI/ThoughtSpot, ContentSquare, Quantum Metrics, Alteryx, UiPath RPA, Python. Cloud: GCP BigQuery, AWS Redshift.\n\nIMPACT: $500M+ annualized incremental revenue, 150+ experiments analyzed, 150+ executive dashboards built, 3x reporting efficiency improvement.\n\nEDUCATION: MBA New England College (2020-2022, GPA 3.9), MS Computer & Info Science NJIT (2015-2016, GPA 3.9), B.Tech CS Engineering VNR VJIET India (2011-2015, GPA 3.8).\n\nCERTIFICATIONS: Contentsquare Certified, SQL for Data Science BigQuery, Alteryx Designer Core, Tableau 10 BI, Advanced SQL, Google Analytics IQ, AWS Data Analytics, Scrum Master, and 10+ more.\n\nCONTACT: palthitarun@gmail.com, (201) 744-4259, LinkedIn (in nav), about.me. Open to Analytics Manager & Senior Analytics Manager roles.\n\nLANGUAGES: English (fluent), Hindi (fluent), Telugu (native).\n\nHOBBIES: Badminton, pickleball, cricket, table tennis, cooking (Indian/Japanese/Italian), photography, hiking.';
+
+  var API_FAILED = false; // Once API fails with credits error, stay in KB mode
+
+  async function sendMessage(text) {
     if (!text) return;
     input.value = '';
     input.style.height = 'auto';
@@ -5541,7 +5624,52 @@ function toggleProj(el) {
     addMessage('user', text);
     playSpaceSend();
     addTyping();
-    // Simulate a short thinking delay for natural feel
+
+    // Try live API first, unless we already know credits are gone
+    if (!API_FAILED) {
+      try {
+        chatHistory.push({ role: 'user', content: text });
+        var res = await fetch('https://portfolio-chat.palthitarun.workers.dev', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 200,
+            system: PORTFOLIO_CONTEXT,
+            messages: chatHistory
+          })
+        });
+        var data = await res.json();
+
+        // Check for credits error
+        if (data.error && data.error.type === 'invalid_request_error' &&
+            data.error.message && data.error.message.includes('credit')) {
+          API_FAILED = true;
+          throw new Error('credits_exhausted');
+        }
+
+        // Check for other API errors
+        if (data.type === 'error' || !data.content || !data.content[0]) {
+          throw new Error('api_error');
+        }
+
+        var reply = data.content[0].text;
+        chatHistory.push({ role: 'assistant', content: reply });
+        removeTyping();
+        playSpaceReply();
+        addMessage('bot', reply);
+        sendBtn.disabled = false;
+        input.focus();
+        return;
+
+      } catch(e) {
+        // Credits gone or API failed — silently fall through to KB
+        if (e.message === 'credits_exhausted') API_FAILED = true;
+        chatHistory.pop(); // remove the user message we added
+      }
+    }
+
+    // Fallback: static KB (seamless, user never knows)
     setTimeout(function() {
       removeTyping();
       var reply = getBotReply(text);
@@ -5549,7 +5677,7 @@ function toggleProj(el) {
       addMessage('bot', reply);
       sendBtn.disabled = false;
       input.focus();
-    }, 600 + Math.random() * 400);
+    }, 700 + Math.random() * 400);
   }
 })();
 </script>
