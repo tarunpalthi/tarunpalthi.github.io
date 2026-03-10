@@ -938,11 +938,13 @@
   .impact-card.ic-revenue::after  { background: #34d399; }
   .impact-card.ic-revenue:hover   { border-color: rgba(52,211,153,0.45); box-shadow: 0 8px 32px rgba(52,211,153,0.12); }
   .impact-card.ic-revenue .impact-metric {
-    background: linear-gradient(135deg, #2d1b69 0%, #1a0533 100%);
+    background: none;
     -webkit-background-clip: unset;
     -webkit-text-fill-color: #2dda96;
     color: #2dda96;
     text-shadow: 0 0 28px rgba(45,218,150,0.6), 0 0 6px rgba(45,218,150,0.3);
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   /* Card 2, Experiments, Electric blue */
@@ -990,6 +992,8 @@
     line-height: 1;
   }
   .impact-metric {
+    user-select: none;
+    -webkit-user-select: none;
     font-family: 'Syne', sans-serif;
     font-size: 2.6rem;
     font-weight: 800;
@@ -2654,7 +2658,7 @@
 <section>
   <div id="experience" style="max-width:1100px;margin:0 auto">
     <div class="section-label reveal">Experience</div>
-    <h2 class="section-title reveal">7+ Years of<br>Analytics That Moved the Needle</h2>
+    <h2 class="section-title reveal">Analytics That<br>Moved the Needle</h2>
     <p class="section-sub reveal">From healthcare data to Fortune 500 digital strategy, each step taught me something new.</p>
 
     <div class="exp-timeline-wrap reveal">
