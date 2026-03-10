@@ -5290,14 +5290,14 @@ function toggleProj(el) {
   }, { passive: false });
 
   document.addEventListener('touchend', function(e) {
-    if (!isDragging) return;
+    var elapsed = Date.now() - touchStartTime;
+    var isTap = !dragMoved && elapsed < 500;
+    // Reset drag state
     isDragging = false;
     launcher.classList.remove('dragging');
-    var elapsed = Date.now() - touchStartTime;
-    // Treat as click if: didn't move much AND tap was quick (< 300ms)
-    var isTap = !dragMoved || elapsed < 300;
+    dragMoved = false;
     if (isTap) {
-      dragMoved = false;
+      e.preventDefault();
       playSpaceOpen();
       isOpen = !isOpen;
       launcher.classList.toggle('open', isOpen);
@@ -5311,7 +5311,6 @@ function toggleProj(el) {
         setTimeout(function() { input.focus(); }, 300);
       }
     }
-    dragMoved = false;
   });
 
   // Mobile keyboard: reposition chat window when virtual keyboard opens
