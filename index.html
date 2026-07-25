@@ -1044,6 +1044,20 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
+  .chart-view-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 6px 16px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .chart-view-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  .chart-view-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
   .bar-chart-wrap {
     display: flex;
     flex-direction: column;
@@ -2967,12 +2981,19 @@
     </div>
     <div class="chart-area reveal">
       <div class="chart-title">Skill Depth Across Analytics Domains</div>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
-        <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent)"></span>Expert</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent2)"></span>Advanced</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent3)"></span>Intermediate</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e3b341"></span>Limited</span>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;align-items:center;justify-content:space-between">
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent)"></span>Expert</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent2)"></span>Advanced</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent3)"></span>Intermediate</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e3b341"></span>Limited</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button type="button" id="viewBarsBtn" class="chart-view-btn active">Bars</button>
+          <button type="button" id="viewRadarBtn" class="chart-view-btn">Radar</button>
+        </div>
       </div>
+      <div id="barsView">
       <div class="bar-chart-wrap">
         <div class="bar-chart-scroll-hint">&#8594; swipe to see all</div>
         <div class="bar-chart-outer">
@@ -3023,6 +3044,10 @@
         </div>
         </div><!-- /bar-chart-inner -->
         </div><!-- /bar-chart-outer -->
+      </div>
+      </div><!-- /barsView -->
+      <div id="radarView" style="display:none;position:relative;width:100%;height:380px;max-width:480px;margin:0 auto">
+        <canvas id="skillRadarChart" role="img" aria-label="Radar chart of skill depth across 8 analytics domains">Skill depth by domain: Digital Analytics 95, SQL and Data 93, Experimentation 90, BI and Dashboards 85, Stakeholder Consulting 80, Data Storytelling 75, Cloud Analytics 60, Statistical Programming 30.</canvas>
       </div>
     </div>
   </div>
@@ -5761,6 +5786,177 @@ function toggleProj(el) {
       sendBtn.disabled = false;
       input.focus();
     }, 700 + Math.random() * 400);
+  }
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function() {
+  function isLight() { return document.body.classList.contains('light-mode'); }
+  function cssVar(name) {
+    return getComputedStyle(document.body).getPropertyValue(name).trim();
+  }
+
+  var radarChart = null;
+
+  var domains = [
+    { label: 'Digital Analytics', value: 95, tier: 'blue' },
+    { label: 'SQL & Data', value: 93, tier: 'blue' },
+    { label: 'Experimentation', value: 90, tier: 'blue' },
+    { label: 'BI & Dashboards', value: 85, tier: 'green' },
+    { label: 'Stakeholder Consulting', value: 80, tier: 'green' },
+    { label: 'Data Storytelling', value: 75, tier: 'green' },
+    { label: 'Cloud Analytics', value: 60, tier: 'orange' },
+    { label: 'Statistical Programming', value: 30, tier: 'yellow' }
+  ];
+
+  function hexToRgba(hex, alpha) {
+    hex = (hex || '').replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(function(c){ return c + c; }).join('');
+    if (hex.length !== 6) return 'rgba(88,166,255,' + alpha + ')';
+    var r = parseInt(hex.substring(0,2), 16);
+    var g = parseInt(hex.substring(2,4), 16);
+    var b = parseInt(hex.substring(4,6), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
+
+  function buildRadar() {
+    var canvas = document.getElementById('skillRadarChart');
+    if (!canvas) return;
+    var light = isLight();
+    var muted = cssVar('--muted') || '#8b949e';
+    var gridColor = light ? 'rgba(0,0,0,0.10)' : 'rgba(255,255,255,0.10)';
+    var surface = cssVar('--surface2') || (light ? '#eef1f7' : '#161b22');
+
+    var tierColors = {
+      blue:   cssVar('--accent')  || (light ? '#0969da' : '#58a6ff'),
+      green:  cssVar('--accent2') || (light ? '#1a7f37' : '#3fb950'),
+      orange: cssVar('--accent3') || (light ? '#cf222e' : '#f78166'),
+      yellow: cssVar('--gold')    || (light ? '#9a6700' : '#e3b341')
+    };
+
+    var pointColors = domains.map(function(d) { return tierColors[d.tier]; });
+
+    var heatmapFillPlugin = {
+      id: 'heatmapFill',
+      afterLayout: function(chart) {
+        var rScale = chart.scales.r;
+        if (!rScale) return;
+        var ctx = chart.ctx;
+        var cx = rScale.xCenter, cy = rScale.yCenter;
+        var n = domains.length;
+        var fill;
+        if (ctx.createConicGradient) {
+          fill = ctx.createConicGradient(-Math.PI / 2, cx, cy);
+          domains.forEach(function(d, i) {
+            fill.addColorStop(i / n, hexToRgba(tierColors[d.tier], 0.55));
+          });
+          fill.addColorStop(1, hexToRgba(tierColors[domains[0].tier], 0.55));
+        } else {
+          fill = hexToRgba(tierColors.blue, 0.18);
+        }
+        chart.data.datasets[0].backgroundColor = fill;
+      }
+    };
+
+    var minimalGlowPlugin = {
+      id: 'minimalGlow',
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(point, i) {
+          ctx.save();
+          ctx.shadowColor = pointColors[i];
+          ctx.shadowBlur = 7;
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = pointColors[i];
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    };
+
+    if (radarChart) radarChart.destroy();
+    radarChart = new Chart(canvas, {
+      type: 'radar',
+      data: {
+        labels: domains.map(function(d) { return d.label; }),
+        datasets: [{
+          label: 'Skill depth',
+          data: domains.map(function(d) { return d.value; }),
+          backgroundColor: gridColor,
+          borderColor: gridColor,
+          borderWidth: 1.5,
+          segment: {
+            borderColor: function(ctx) { return pointColors[ctx.p1DataIndex]; }
+          },
+          pointBackgroundColor: 'transparent',
+          pointBorderColor: 'transparent',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: pointColors,
+          pointHoverBorderColor: pointColors
+        }]
+      },
+      plugins: [heatmapFillPlugin, minimalGlowPlugin],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            min: 0, max: 100,
+            ticks: { display: false },
+            grid: { color: gridColor },
+            angleLines: { color: gridColor },
+            pointLabels: { color: muted, font: { size: window.innerWidth < 640 ? 9 : 11 } }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var tierNames = { blue: 'Expert', green: 'Advanced', orange: 'Intermediate', yellow: 'Limited' };
+                var d = domains[ctx.dataIndex];
+                return d.value + '%  \u00b7  ' + tierNames[d.tier];
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  var barsBtn = document.getElementById('viewBarsBtn');
+  var radarBtn = document.getElementById('viewRadarBtn');
+  var barsView = document.getElementById('barsView');
+  var radarView = document.getElementById('radarView');
+
+  if (barsBtn && radarBtn) {
+    barsBtn.addEventListener('click', function() {
+      barsBtn.classList.add('active');
+      radarBtn.classList.remove('active');
+      barsView.style.display = '';
+      radarView.style.display = 'none';
+    });
+    radarBtn.addEventListener('click', function() {
+      radarBtn.classList.add('active');
+      barsBtn.classList.remove('active');
+      radarView.style.display = '';
+      barsView.style.display = 'none';
+      buildRadar();
+    });
+  }
+
+  var themeToggleBtn = document.getElementById('themeToggle');
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', function() {
+      setTimeout(function() {
+        if (radarView.style.display !== 'none') buildRadar();
+      }, 50);
+    });
   }
 })();
 </script>
