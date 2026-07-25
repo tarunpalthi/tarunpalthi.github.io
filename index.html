@@ -1058,6 +1058,21 @@
   }
   .chart-view-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
   .chart-view-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+  .chart-lazy {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+    transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .chart-lazy.visible { opacity: 1; transform: translateY(0) scale(1); }
+  @keyframes expCardFlash {
+    0%   { box-shadow: 0 0 0 0 rgba(88,166,255,0); border-color: var(--border); }
+    20%  { box-shadow: 0 0 0 4px rgba(88,166,255,0.35); border-color: var(--accent); }
+    100% { box-shadow: 0 0 0 0 rgba(88,166,255,0); border-color: var(--border); }
+  }
+  .exp-item.flash-highlight .exp-card {
+    animation: expCardFlash 1.6s ease-out;
+    border-radius: 16px;
+  }
   .bar-chart-wrap {
     display: flex;
     flex-direction: column;
@@ -2606,7 +2621,7 @@
         <span class="name-line2">Palthi</span>
       </h1>
       <p class="hero-title">
-        <strong>Analytics Manager</strong> and <strong>Senior Digital Analytics Leader</strong> who has spent 8+ years turning <strong>complex data</strong> into <strong>real business results</strong> across digital, financial, and operational analytics
+        <strong>Senior Analytics Leader</strong> with 8+ years leading enterprise <strong>digital analytics</strong>, <strong>experimentation</strong>, and <strong>AI-enabled reporting</strong> across telecom, finance, healthcare, and retail, serving as a trusted partner to <strong>Product</strong>, <strong>Marketing</strong>, and <strong>CX leaders</strong> turning complex data into executive decisions
       </p>
       <div class="hero-stats">
         <div class="stat-item">
@@ -2665,7 +2680,7 @@
       <div class="section-label">About</div>
       <h2 class="section-title">Data that<br>gets things done</h2>
       <p>I've spent over 8 years helping organizations make sense of their data and act on it with confidence. <strong>Analytics</strong> has always been at the center of the <strong>product</strong>, <strong>marketing</strong>, and <strong>customer experience</strong> work I've been part of.</p>
-      <p>Right now at <em>Verizon</em>, I lead analytics consulting across <strong>site optimization</strong> and <strong>MarTech</strong>. That means building out <strong>experimentation frameworks</strong>, keeping <strong>executive dashboards</strong> running and useful, and making sure <strong>A/B test results</strong> actually shape what gets built next.</p>
+      <p>Right now at <em>Verizon</em>, I lead enterprise analytics strategy across <strong>Mobile and Home Site Optimization, Mar-Tech initiatives</strong>, partnering with Product, Marketing, Engineering, and UX teams on scalable measurement. I'm also driving Verizon's shift toward <strong>AI-enabled analytics</strong>, building <strong>GenAI-powered data products</strong> and automation that make reporting faster and smarter.</p>
       <p>Before Verizon, I worked with <em>PwC</em> on <strong>financial automation</strong> and got my start at <em>ADP</em> and in <strong>healthcare analytics</strong>. That mix of industries has given me a perspective most digital analysts don't have.</p>
       <p>Outside of work, I'm passionate about playing <strong>sports</strong> (badminton, pickleball, cricket, and table tennis), <strong>cooking</strong> (Indian, Japanese, and Italian), photography, hiking, and exploring new adventures.</p>
     </div>
@@ -2704,10 +2719,20 @@
     <h2 class="section-title reveal">Analytics That<br>Moved the Needle</h2>
     <p class="section-sub reveal">From healthcare data to Fortune 500 digital strategy, each step taught me something new.</p>
 
+    <div class="chart-area reveal chart-lazy" id="careerCompCard" style="margin-bottom:40px">
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px">
+        <div class="chart-title" style="margin-bottom:0">Career Composition</div>
+        <div style="font-size:0.72rem;color:var(--muted);opacity:0.75;font-style:italic">hover for tenure &bull; click to learn more</div>
+      </div>
+      <div style="position:relative;width:100%;height:210px">
+        <canvas id="careerCompChart" role="img" aria-label="Horizontal stacked bar showing share of career spent at each role since 2015, including client engagements">Career composition by role, in months.</canvas>
+      </div>
+    </div>
+
     <div class="exp-timeline-wrap reveal">
 
       <!-- 1. Verizon (current) -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-analytics-lead">
         <div class="exp-node"><div class="exp-dot green"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2724,7 +2749,7 @@
             <span class="exp-card-period">Jul 2022 – Present</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">I lead analytics consulting for Mobile/Home Site Optimization and MarTech, partnering with Adobe tagging teams to define and instrument data capture requirements across digital funnels. I design and maintain executive-ready Adobe Analytics and Looker dashboards using GitLab for version control, and analyze customer journeys via SQL and platforms like ContentSquare and Quantum Metric to uncover deeper friction points. I spearheaded the Digital Semantic Layer launch, using GenAI tools like Claude and Gemini to transform GCP tables into Looker data products that bridge clickstream sessions with live support logs. I also established MCP server integrations linking BigQuery, Teradata, and Jira to AI-assisted tooling, automating routine querying and status tracking to speed up reporting and cut manual overhead.</div>
+            <div class="exp-card-desc">Lead enterprise analytics strategy for Mobile, Home, Site Optimization, and MarTech, partnering with Product, Marketing, Engineering, UX, and Adobe Tagging teams to design scalable measurement strategies. I build Adobe Analytics and Looker dashboards using GitLab for version control, and analyze customer journeys via SQL, ContentSquare, and Quantum Metric to resolve friction points. I spearheaded Verizon's Digital Semantic Layer, transforming BigQuery datasets into reusable Looker data products using GenAI tools like Claude Code and Gemini, and built AI-enabled MCP integrations linking BigQuery, Teradata, and Jira to automate reporting workflows, delivering 150+ executive dashboards and 150+ experimentation initiatives that contributed to $500M+ in business impact.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">Adobe Analytics</span>
               <span class="exp-card-tag">GCP BigQuery</span>
@@ -2741,7 +2766,7 @@
       </div>
 
       <!-- 2. AgreeYa | Verizon -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-data-analytics-consultant">
         <div class="exp-node"><div class="exp-dot"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2755,7 +2780,7 @@
             <span class="exp-card-period">Sep 2021 – Jul 2022</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Worked as an analytics consultant on Real-Time Marketing and Site Optimization initiatives. Delivered insights and dashboards that senior stakeholders actually used to make decisions. Pulled and joined data from multiple platforms using SQL in Teradata to assess digital performance. Built ad-hoc analyses and more scalable reporting in Adobe Analytics.</div>
+            <div class="exp-card-desc">Served as analytics consultant for RTM and Site Optimization initiatives, partnering with tagging teams to define measurement requirements and validate tracking implementations for accurate data capture. I leveraged SQL in Teradata to query and integrate data across platforms, enabling comprehensive digital performance analysis and reporting, and developed scalable reporting solutions along with a comprehensive measurement framework in Adobe Analytics to track key performance indicators and support data-driven decision-making.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">SQL (Teradata)</span>
               <span class="exp-card-tag">Adobe Analytics</span>
@@ -2767,7 +2792,7 @@
       </div>
 
       <!-- 3. Datawin | Verizon -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-data-analytics-consultant-ii">
         <div class="exp-node"><div class="exp-dot"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2781,7 +2806,7 @@
             <span class="exp-card-period">Jan 2020 – Jun 2021</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Provided competitive and self-serve analytics for Verizon Wireless and FiOS, working across Adobe Analytics, Tableau, and ThoughtSpot. Identified performance gaps and worked with teams to fix them. Optimized complex SQL queries in Teradata and helped improve site search and cross-channel tracking.</div>
+            <div class="exp-card-desc">Delivered competitive and self-serve analytics insights for Verizon Wireless and FiOS using Adobe Analytics, Tableau, and ThoughtSpot to drive digital performance improvements. I partnered with tagging teams to enhance tracking implementations, resolve data capture gaps, and improve analytics platform effectiveness, while optimizing Teradata SQL queries and supporting QA validation for internal site search and cross-channel performance tracking, improving reporting efficiency and accuracy.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">Adobe Analytics</span>
               <span class="exp-card-tag">Tableau</span>
@@ -2793,7 +2818,7 @@
       </div>
 
       <!-- 4. Datawin | PwC -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-financial-data-analyst">
         <div class="exp-node"><div class="exp-dot gold"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2807,7 +2832,7 @@
             <span class="exp-card-period">Jan 2019 – Aug 2019</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Used Alteryx to automate financial data workflows, which cut down a lot of manual work and improved data quality. Built Tableau and Power BI dashboards for the financial reporting team. Wrote ETL scripts and SQL queries to make reporting more scalable. Set up UiPath RPA to take over repetitive manual tasks.</div>
+            <div class="exp-card-desc">Automated financial data workflows using Alteryx, improving processing efficiency and data quality, and built Tableau and Power BI dashboards to support financial reporting and analysis. I developed ETL scripts and SQL queries for scalable reporting solutions and implemented RPA solutions using UiPath to reduce repetitive manual tasks.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">Alteryx</span>
               <span class="exp-card-tag">Power BI</span>
@@ -2820,7 +2845,7 @@
       </div>
 
       <!-- 5. Integra Technologies -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-bi-consultant">
         <div class="exp-node"><div class="exp-dot"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2834,7 +2859,7 @@
             <span class="exp-card-period">Nov 2017 – Dec 2018</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Built Tableau dashboards and BI reports that helped finance and operations teams make better decisions. Analyzed performance metrics using SQL and SAS. Worked closely with operations and management to turn data findings into things people could actually do something with.</div>
+            <div class="exp-card-desc">Built Tableau dashboards and BI reports to support financial and operational decision-making, and established a data governance framework using SQL and Tableau to ensure compliance with reporting standards, increasing report accuracy by 30% and supporting quarterly executive presentations.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">Tableau</span>
               <span class="exp-card-tag">SAS</span>
@@ -2846,7 +2871,7 @@
       </div>
 
       <!-- 6. ADP Full-time -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-business-data-analyst">
         <div class="exp-node"><div class="exp-dot"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2860,7 +2885,7 @@
             <span class="exp-card-period">Jun 2017 – Aug 2017</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Collaborated with cross-functional teams in an Agile setup to gather requirements and ship analytics solutions. Built SQL datasets and Tableau reports for employee performance analysis.</div>
+            <div class="exp-card-desc">Worked with cross-functional teams in an Agile environment to gather requirements and deliver analytics solutions, developing SQL datasets and Tableau reports for employee performance analysis.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">SQL</span>
               <span class="exp-card-tag">Tableau</span>
@@ -2872,7 +2897,7 @@
       </div>
 
       <!-- 7. ADP Intern -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-db2-dba-intern">
         <div class="exp-node"><div class="exp-dot purple"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2886,7 +2911,7 @@
             <span class="exp-card-period">Jun 2016 – Aug 2016</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Worked with the DB2 Performance Team to analyze query performance and flag high CPU usage queries using IBM Optim Query Workload Tuner. Delivered findings with recommendations on predicate changes, access path improvements, and query rewrites.</div>
+            <div class="exp-card-desc">Analyzed DB2 query performance using IBM Optim Query Workload Tuner and supported optimization efforts, delivering recommendations on predicate changes, access path improvements, and query rewrites.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">IBM DB2</span>
               <span class="exp-card-tag">SQL</span>
@@ -2898,7 +2923,7 @@
       </div>
 
       <!-- 8. NJIT -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-database-admin-assistant">
         <div class="exp-node"><div class="exp-dot purple"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2912,7 +2937,7 @@
             <span class="exp-card-period">Aug 2016 – Dec 2016</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Helped monitor the university database infrastructure and handled routine admin and optimization tasks. Got hands-on experience with database operations, identity and access management, and supporting users.</div>
+            <div class="exp-card-desc">Monitored the performance of the university's database infrastructure and assisted with optimization tasks, while enhancing my knowledge base through hands-on experience with identity access management and customer service.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">Database Admin</span>
               <span class="exp-card-tag">IAM</span>
@@ -2923,7 +2948,7 @@
       </div>
 
       <!-- 9. Healthcare Pharmacy -->
-      <div class="exp-item">
+      <div class="exp-item" id="exp-role-healthcare-data-analyst">
         <div class="exp-node"><div class="exp-dot purple"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
@@ -2937,7 +2962,7 @@
             <span class="exp-card-period">Sep 2015 – Aug 2016</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Managed and analyzed pharmacy and patient records, making sure data was accurate and met compliance requirements. Found operational inefficiencies through data analysis and put process improvements in place to reduce errors.</div>
+            <div class="exp-card-desc">Analyzed healthcare and inventory data to support pharmacy operations and patient management, and worked on PrimeRx, a cloud, SaaS, and web-based software for inventory management, e-prescribing, and point-of-sale, to build an efficient pharmacy workflow and maintain high productivity.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">Healthcare Data</span>
               <span class="exp-card-tag">Data Quality</span>
@@ -2989,11 +3014,11 @@
           <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e3b341"></span>Limited</span>
         </div>
         <div style="display:flex;gap:8px">
-          <button type="button" id="viewBarsBtn" class="chart-view-btn active">Bars</button>
-          <button type="button" id="viewRadarBtn" class="chart-view-btn">Radar</button>
+          <button type="button" id="viewRadarBtn" class="chart-view-btn active">Radar</button>
+          <button type="button" id="viewBarsBtn" class="chart-view-btn">Bars</button>
         </div>
       </div>
-      <div id="barsView">
+      <div id="barsView" style="display:none">
       <div class="bar-chart-wrap">
         <div class="bar-chart-scroll-hint">&#8594; swipe to see all</div>
         <div class="bar-chart-outer">
@@ -3046,7 +3071,7 @@
         </div><!-- /bar-chart-outer -->
       </div>
       </div><!-- /barsView -->
-      <div id="radarView" style="display:none;position:relative;width:100%;height:380px;max-width:480px;margin:0 auto">
+      <div id="radarView" style="position:relative;width:100%;height:380px;max-width:480px;margin:0 auto">
         <canvas id="skillRadarChart" role="img" aria-label="Radar chart of skill depth across 8 analytics domains">Skill depth by domain: Digital Analytics 95, SQL and Data 93, Experimentation 90, BI and Dashboards 85, Stakeholder Consulting 80, Data Storytelling 75, Cloud Analytics 60, Statistical Programming 30.</canvas>
       </div>
     </div>
@@ -3058,6 +3083,16 @@
   <div id="skills-section">
     <div class="section-label reveal">Skills & Tools</div>
     <h2 class="section-title reveal">Tools I gained<br>expertise over time</h2>
+    <div class="chart-area reveal chart-lazy" id="toolsCategoryCard" style="margin-bottom:32px">
+      <div class="chart-title">Tools by Category</div>
+      <div style="display:flex;gap:32px;flex-wrap:wrap;align-items:center;justify-content:center">
+        <div style="position:relative;width:220px;height:220px;flex-shrink:0">
+          <canvas id="toolsCategoryChart" role="img" aria-label="Donut chart of 16 tools grouped by category: BI and Dashboards, Automation and Programming, Data Warehousing, Analytics Platforms, Behavioral Analytics, Project Management">Tools grouped by category.</canvas>
+        </div>
+        <div id="toolsCategoryLegend" style="display:flex;flex-direction:column;gap:8px;font-size:0.78rem;color:var(--muted)"></div>
+      </div>
+    </div>
+
     <div class="skills-grid">
       <div class="skill-bars reveal">
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px">
@@ -5946,15 +5981,279 @@ function toggleProj(el) {
       barsBtn.classList.remove('active');
       radarView.style.display = '';
       barsView.style.display = 'none';
-      buildRadar();
+      if (radarChart) {
+        requestAnimationFrame(function() {
+          radarChart.resize();
+        });
+      } else {
+        buildRadar();
+      }
     });
   }
+
+  buildRadar();
+
+  function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(function(c){ return c + c; }).join('');
+    return [parseInt(hex.substring(0,2),16), parseInt(hex.substring(2,4),16), parseInt(hex.substring(4,6),16)];
+  }
+  function rgbToHex(r, g, b) {
+    function h(v) { var s = Math.max(0, Math.min(255, Math.round(v))).toString(16); return s.length === 1 ? '0' + s : s; }
+    return '#' + h(r) + h(g) + h(b);
+  }
+  function mixColor(hexA, hexB, t) {
+    var a = hexToRgb(hexA), b = hexToRgb(hexB);
+    return rgbToHex(a[0] + (b[0]-a[0])*t, a[1] + (b[1]-a[1])*t, a[2] + (b[2]-a[2])*t);
+  }
+  function lighten(hex, amt) {
+    var c = hexToRgb(hex);
+    return rgbToHex(c[0] + (255 - c[0]) * amt, c[1] + (255 - c[1]) * amt, c[2] + (255 - c[2]) * amt);
+  }
+
+  var careerCompChart = null;
+  var careerSegments = [
+    { type: 'role', role: 'Healthcare Data Analyst', label: 'Healthcare Pharmacy', months: 12 },
+    { type: 'role', role: 'Mainframe DB2 DBA Intern', label: 'ADP, Inc.', months: 3 },
+    { type: 'role', role: 'Database Admin Assistant', label: 'New Jersey Institute of Technology', months: 5 },
+    { type: 'gap', months: 5 },
+    { type: 'role', role: 'Business Data Analyst', label: 'ADP, Inc.', months: 3 },
+    { type: 'gap', months: 2 },
+    { type: 'role', role: 'Data Analytics & BI Consultant', label: 'Integra Technologies', months: 14 },
+    { type: 'role', role: 'Financial Data Analyst', label: 'Datawin Systems (PwC)', months: 8 },
+    { type: 'gap', months: 4 },
+    { type: 'role', role: 'Data Analytics Consultant II', label: 'Datawin Systems (Verizon)', months: 18 },
+    { type: 'gap', months: 2 },
+    { type: 'role', role: 'Data Analytics Consultant', label: 'AgreeYa Solutions (Verizon)', months: 11 },
+    { type: 'role', role: 'Analytics Lead / Consultant', label: 'Verizon', months: 49 }
+  ];
+  var careerYearTicks = [[2016,4],[2017,20],[2018,32],[2019,44],[2020,56],[2021,68],[2022,80],[2023,93],[2024,105],[2025,117],[2026,129]];
+  var careerRoleToId = {
+    'Healthcare Data Analyst': 'exp-role-healthcare-data-analyst',
+    'Mainframe DB2 DBA Intern': 'exp-role-db2-dba-intern',
+    'Database Admin Assistant': 'exp-role-database-admin-assistant',
+    'Business Data Analyst': 'exp-role-business-data-analyst',
+    'Data Analytics & BI Consultant': 'exp-role-bi-consultant',
+    'Financial Data Analyst': 'exp-role-financial-data-analyst',
+    'Data Analytics Consultant II': 'exp-role-data-analytics-consultant-ii',
+    'Data Analytics Consultant': 'exp-role-data-analytics-consultant',
+    'Analytics Lead / Consultant': 'exp-role-analytics-lead'
+  };
+  function goToExpCard(role) {
+    var id = careerRoleToId[role];
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.remove('flash-highlight');
+    void el.offsetWidth;
+    el.classList.add('flash-highlight');
+    setTimeout(function() { el.classList.remove('flash-highlight'); }, 1700);
+  }
+
+  function buildCareerComp() {
+    var canvas = document.getElementById('careerCompChart');
+    if (!canvas) return;
+    var light = isLight();
+    var lightEnd = light ? '#e8dcfb' : '#3a2e5c';
+    var darkEnd  = light ? '#4a1f8f' : '#d9c4ff';
+    var surface = cssVar('--surface2') || (light ? '#eef1f7' : '#161b22');
+    var gapColor = light ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+    var muted = cssVar('--muted') || '#8b949e';
+    var gridColor = light ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+
+    var roleCount = careerSegments.filter(function(s) { return s.type === 'role'; }).length;
+    var ri = 0;
+    var datasets = careerSegments.map(function(s) {
+      if (s.type === 'role') {
+        var color = mixColor(lightEnd, darkEnd, roleCount === 1 ? 1 : ri / (roleCount - 1));
+        ri++;
+        return { label: s.label, role: s.role, isGap: false, months: s.months, data: [s.months], backgroundColor: color, borderColor: surface, borderWidth: { top: 0, bottom: 0, left: 1, right: 1 }, barThickness: 90 };
+      }
+      return { label: 'Between roles', role: 'Between roles', isGap: true, months: s.months, data: [s.months], backgroundColor: gapColor, barThickness: 90 };
+    });
+
+    if (careerCompChart) careerCompChart.destroy();
+    careerCompChart = new Chart(canvas, {
+      type: 'bar',
+      data: { labels: ['Career'], datasets: datasets },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 900, easing: 'easeOutQuart' },
+        interaction: { mode: 'nearest', intersect: true },
+        layout: { padding: { right: 24, left: 4 } },
+        onHover: function(evt, elements) {
+          var isRole = elements.length && !elements.some(function(el) {
+            return careerCompChart.data.datasets[el.datasetIndex].isGap;
+          });
+          evt.native.target.style.cursor = isRole ? 'pointer' : 'default';
+        },
+        onClick: function(evt, elements) {
+          if (!elements.length) return;
+          var el = elements[0];
+          var ds = careerCompChart.data.datasets[el.datasetIndex];
+          if (ds.isGap) return;
+          goToExpCard(ds.role);
+        },
+        scales: {
+          x: {
+            type: 'linear', stacked: true, min: 0, max: 150,
+            afterBuildTicks: function(axis) { axis.ticks = careerYearTicks.map(function(t) { return { value: t[1] }; }); },
+            ticks: {
+              callback: function(v) {
+                var found = careerYearTicks.filter(function(t) { return t[1] === v; })[0];
+                return found ? found[0] : '';
+              },
+              color: muted, font: { size: 10 },
+              autoSkip: false, maxRotation: 0, minRotation: 0, padding: 4
+            },
+            grid: { color: gridColor }
+          },
+          y: { stacked: true, display: false }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            position: 'nearest',
+            titleFont: { size: 11, weight: '600' },
+            bodyFont: { size: 10 },
+            padding: 6,
+            caretSize: 4,
+            displayColors: false,
+            callbacks: {
+              title: function(items) { return items[0].dataset.role; },
+              label: function(ctx) {
+                if (ctx.dataset.isGap) return 'Between roles \u00b7 ' + ctx.dataset.months + ' mo';
+                var mo = ctx.raw;
+                if (mo > 12) {
+                  var yrs = (mo / 12).toFixed(1);
+                  return ctx.dataset.label + ': ' + mo + 'mo (' + yrs + 'y)';
+                }
+                return ctx.dataset.label + ': ' + mo + 'mo';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  var toolsCategoryChart = null;
+  var toolCats = [
+    { label: 'BI & Dashboards', count: 4 },
+    { label: 'Automation & Programming', count: 4 },
+    { label: 'Data Warehousing', count: 3 },
+    { label: 'Analytics Platforms', count: 2 },
+    { label: 'Behavioral Analytics', count: 2 },
+    { label: 'Project Management', count: 1 }
+  ];
+
+  function buildToolsCategory() {
+    var canvas = document.getElementById('toolsCategoryChart');
+    if (!canvas) return;
+    var light = isLight();
+    var accent  = cssVar('--accent')  || (light ? '#0969da' : '#58a6ff');
+    var accent2 = cssVar('--accent2') || (light ? '#1a7f37' : '#3fb950');
+    var accent3 = cssVar('--accent3') || (light ? '#cf222e' : '#f78166');
+    var gold    = cssVar('--gold')    || (light ? '#9a6700' : '#e3b341');
+    var purple  = light ? '#8250df' : '#bf8fff';
+    var pink    = light ? '#e87ba4' : '#d55181';
+    var colors = [accent, accent2, accent3, gold, purple, pink];
+
+    var glowPlugin = {
+      id: 'glowHover',
+      afterDatasetDraw: function(chart) {
+        var active = chart.getActiveElements();
+        if (!active.length) return;
+        var meta = chart.getDatasetMeta(0);
+        var ctx = chart.ctx;
+        active.forEach(function(a) {
+          var el = meta.data[a.index];
+          var color = colors[a.index];
+          ctx.save();
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 20;
+          el.draw(ctx);
+          ctx.restore();
+        });
+      }
+    };
+
+    if (toolsCategoryChart) toolsCategoryChart.destroy();
+    toolsCategoryChart = new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        labels: toolCats.map(function(t) { return t.label; }),
+        datasets: [{
+          data: toolCats.map(function(t) { return t.count; }),
+          backgroundColor: colors,
+          hoverBackgroundColor: colors,
+          hoverOffset: 10,
+          borderWidth: 0,
+          spacing: 3
+        }]
+      },
+      plugins: [glowPlugin],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: { padding: 14 },
+        animation: { duration: 900, easing: 'easeOutQuart' },
+        interaction: { mode: 'nearest', intersect: true },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) { return ctx.label + ' (' + ctx.raw + ')'; }
+            }
+          }
+        }
+      }
+    });
+
+    var legendEl = document.getElementById('toolsCategoryLegend');
+    if (legendEl) {
+      legendEl.innerHTML = toolCats.map(function(t, i) {
+        return '<span style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:' + colors[i] + '"></span>' + t.label + '</span>';
+      }).join('');
+    }
+  }
+
+  function revealCardOnScroll(cardId, getChart) {
+    var card = document.getElementById(cardId);
+    if (!card) return;
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          card.classList.add('visible');
+          if (getChart) {
+            var chart = getChart();
+            if (chart) {
+              chart.reset();
+              chart.update();
+            }
+          }
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.01 });
+    obs.observe(card);
+  }
+
+  buildCareerComp();
+  buildToolsCategory();
+  revealCardOnScroll('careerCompCard', function() { return careerCompChart; });
+  revealCardOnScroll('toolsCategoryCard', function() { return toolsCategoryChart; });
 
   var themeToggleBtn = document.getElementById('themeToggle');
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', function() {
       setTimeout(function() {
         if (radarView.style.display !== 'none') buildRadar();
+        buildToolsCategory();
+        buildCareerComp();
       }, 50);
     });
   }
