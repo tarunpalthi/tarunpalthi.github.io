@@ -6292,9 +6292,9 @@ function toggleProj(el) {
   revealCardOnScroll('careerCompCard', function() { return careerCompChart; });
   revealCardOnScroll('toolsCategoryCard', function() { return toolsCategoryChart; });
   revealCardOnScroll('skillDepthCard', null, function() {
-    buildRadar();
     var rv = document.getElementById('radarView');
     if (rv) rv.classList.add('visible');
+    setTimeout(function() { buildRadar(); }, 650);
   });
   setTimeout(function() {
     var rv = document.getElementById('radarView');
