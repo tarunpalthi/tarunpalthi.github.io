@@ -3004,7 +3004,7 @@
         <div class="impact-desc"><strong>Reporting Efficiency</strong>, Got there through SQL query optimization and automating data workflows that used to eat up hours of manual time</div>
       </div>
     </div>
-    <div class="chart-area reveal" id="skillDepthCard">
+    <div class="chart-area reveal chart-lazy" id="skillDepthCard">
       <div class="chart-title">Skill Depth Across Analytics Domains</div>
       <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;align-items:center;justify-content:space-between">
         <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
@@ -3071,7 +3071,7 @@
         </div><!-- /bar-chart-outer -->
       </div>
       </div><!-- /barsView -->
-      <div id="radarView" class="chart-lazy" style="position:relative;width:100%;height:380px;max-width:480px;margin:0 auto">
+      <div id="radarView" style="position:relative;width:100%;height:380px;max-width:480px;margin:0 auto">
         <canvas id="skillRadarChart" role="img" aria-label="Radar chart of skill depth across 8 analytics domains">Skill depth by domain: Digital Analytics 95, SQL and Data 93, Experimentation 90, BI and Dashboards 85, Stakeholder Consulting 80, Data Storytelling 75, Cloud Analytics 60, Statistical Programming 30.</canvas>
       </div>
     </div>
@@ -6291,15 +6291,7 @@ function toggleProj(el) {
   buildToolsCategory();
   revealCardOnScroll('careerCompCard', function() { return careerCompChart; });
   revealCardOnScroll('toolsCategoryCard', function() { return toolsCategoryChart; });
-  revealCardOnScroll('skillDepthCard', null, function() {
-    var rv = document.getElementById('radarView');
-    if (rv) rv.classList.add('visible');
-    setTimeout(function() { buildRadar(); }, 650);
-  });
-  setTimeout(function() {
-    var rv = document.getElementById('radarView');
-    if (rv && !rv.classList.contains('visible')) rv.classList.add('visible');
-  }, 4000);
+  revealCardOnScroll('skillDepthCard', null, function() { buildRadar(); });
 
   var themeToggleBtn = document.getElementById('themeToggle');
   if (themeToggleBtn) {
