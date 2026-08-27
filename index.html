@@ -3004,7 +3004,7 @@
         <div class="impact-desc"><strong>Reporting Efficiency</strong>, Got there through SQL query optimization and automating data workflows that used to eat up hours of manual time</div>
       </div>
     </div>
-    <div class="chart-area reveal">
+    <div class="chart-area reveal" id="skillDepthCard">
       <div class="chart-title">Skill Depth Across Analytics Domains</div>
       <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;align-items:center;justify-content:space-between">
         <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
@@ -3559,13 +3559,27 @@
   <div class="rec-inner">
     <div class="section-label reveal">LinkedIn Recommendations</div>
     <h2 class="section-title reveal">What people I've<br>worked with say</h2>
-    <p class="section-sub reveal">11 recommendations from managers, directors, and peers across Verizon and PwC.</p>
+    <p class="section-sub reveal">12 recommendations from managers, directors, and peers across Verizon and PwC.</p>
 
     <!-- Carousel -->
     <div class="rec-carousel-wrap reveal">
       <button class="rec-arrow left" id="recPrev">&#8592;</button>
       <button class="rec-arrow right" id="recNext">&#8594;</button>
       <div class="rec-carousel" id="recCarousel">
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <div class="rec-avatar rec-avatar-img"><img src="data:image/jpeg;base64,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" alt="Juan Coello"></div>
+            <div>
+              <div class="rec-name">Juan Coello</div>
+              <div class="rec-role">Senior Manager, Digital Marketing</div>
+              <div class="rec-company">Verizon · Worked on different teams</div>
+            </div>
+          </div>
+          <div class="rec-stars">★★★★★</div>
+          <div class="rec-text">"Tarun is exceptional when it comes to combining strong technical expertise with quick execution. During our time together at Verizon, he consistently demonstrated an ability to pivot at a moment's notice, adapting to new technologies and shifting business needs seamlessly. His problem-solving mindset and ability to adjust rapidly make him a key contributor on any initiative."</div>
+          <div class="rec-relation">📅 August 2026</div>
+        </div>
 
         <div class="rec-card">
           <div class="rec-header">
@@ -3729,7 +3743,7 @@
     <!-- Summary bar -->
     <div class="reveal rec-summary-bar" style="transition-delay:0.2s">
       <div class="rec-summary-item">
-        <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--gold)">11</div>
+        <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--gold)">12</div>
         <div class="rec-summary-label">Recommendations</div>
       </div>
       <div class="rec-summary-item">
@@ -6249,14 +6263,16 @@ function toggleProj(el) {
     }
   }
 
-  function revealCardOnScroll(cardId, getChart) {
+  function revealCardOnScroll(cardId, getChart, rebuildFn) {
     var card = document.getElementById(cardId);
     if (!card) return;
     var obs = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           card.classList.add('visible');
-          if (getChart) {
+          if (rebuildFn) {
+            rebuildFn();
+          } else if (getChart) {
             var chart = getChart();
             if (chart) {
               chart.reset();
@@ -6274,6 +6290,7 @@ function toggleProj(el) {
   buildToolsCategory();
   revealCardOnScroll('careerCompCard', function() { return careerCompChart; });
   revealCardOnScroll('toolsCategoryCard', function() { return toolsCategoryChart; });
+  revealCardOnScroll('skillDepthCard', null, function() { buildRadar(); });
 
   var themeToggleBtn = document.getElementById('themeToggle');
   if (themeToggleBtn) {
