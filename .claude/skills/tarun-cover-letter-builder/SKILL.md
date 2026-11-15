@@ -63,7 +63,7 @@ Palette variables: BRAND (header/footer fill), DUNE (box heading text), BONJOUR 
 
 ## Template (reuse unmodified; change only colors, text, and content)
 
-Font: TeX Gyre Pagella TTFs at `WORK_DIR/fonts/PagellaTG-{regular,bold,italic,bolditalic}.ttf`. If missing, get the OTFs (`apt-get install -y fonts-texgyre`, or the CTAN tex-gyre zip) and convert to TrueType, since ReportLab cannot load CFF OTFs: `fontforge -lang=ff -c "Open('in.otf'); Generate('out.ttf');"`, or without fontforge use fontTools (`pip install fonttools`) and its otf2ttf recipe (`fontTools.pens.cu2quPen`). `registerFontFamily` must immediately follow the four `registerFont` calls or bold silently falls back.
+Font: TeX Gyre Pagella TTFs at `WORK_DIR/fonts/PagellaTG-{regular,bold,italic,bolditalic}.ttf`. If missing, get the OTFs (`apt-get install -y fonts-texgyre`, or the CTAN tex-gyre zip) and convert to TrueType, since ReportLab cannot load CFF OTFs: `fontforge -lang=ff -c "Open('in.otf'); Generate('out.ttf');"`, or without fontforge run the tested converter in this skill: `pip install fonttools && python3 scripts/otf2ttf.py WORK_DIR/fonts` (reads the OTFs from `/usr/share/texmf/fonts/opentype/public/tex-gyre/`). `registerFontFamily` must immediately follow the four `registerFont` calls or bold silently falls back.
 
 ```python
 import os; WORK_DIR=os.environ.get('WORK_DIR','/home/claude/coverletter'); os.chdir(WORK_DIR)
