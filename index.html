@@ -824,6 +824,13 @@
   .exp-card-company.green  { color: var(--accent2); }
   .exp-card-company.purple { color: #a78bfa; }
   .exp-card-company.gold   { color: var(--gold); }
+  .exp-card-via   { color: var(--muted); font-size: 0.72rem; font-style: italic; }
+  .co-verizon{--co:#e5484d} .co-pwc{--co:#f59e0b} .co-integra{--co:#14b8a6} .co-adp{--co:#3b82f6} .co-njit{--co:#a855f7} .co-healthcare{--co:#22c55e}
+  .exp-card-company[class*="co-"]{ color: var(--co); }
+  .exp-dot[class*="co-"]{ border-color: var(--co); }
+  .exp-item:hover .exp-dot[class*="co-"]{ box-shadow: 0 0 0 4px color-mix(in srgb, var(--co) 22%, transparent); }
+  .exp-card-role .co-name{ color: var(--co); }
+  .about-text .co-name{ color: var(--co); font-weight: 600; }
   .exp-card-sep   { color: var(--border); }
   .exp-card-loc   { color: var(--muted); }
   .exp-card-period{
@@ -2680,8 +2687,8 @@
       <div class="section-label">About</div>
       <h2 class="section-title">Data that<br>gets things done</h2>
       <p>I've spent over 8 years helping organizations make sense of their data and act on it with confidence. <strong>Analytics</strong> has always been at the center of the <strong>product</strong>, <strong>marketing</strong>, and <strong>customer experience</strong> work I've been part of.</p>
-      <p>Most recently at <em>Verizon</em>, I led enterprise analytics strategy across <strong>Mobile and Home Site Optimization, Mar-Tech initiatives</strong>, partnering with Product, Marketing, Engineering, and UX teams on scalable measurement. I also drove Verizon's shift toward <strong>AI-enabled analytics</strong>, building <strong>GenAI-powered data products</strong> and automation that made reporting faster and smarter.</p>
-      <p>Before Verizon, I worked with <em>PwC</em> on <strong>financial automation</strong> and got my start at <em>ADP</em> and in <strong>healthcare analytics</strong>. That mix of industries has given me a perspective most digital analysts don't have.</p>
+      <p>Most recently at <em class="co-name co-verizon">Verizon</em>, I led enterprise analytics strategy across <strong>Mobile and Home Site Optimization, Mar-Tech initiatives</strong>, partnering with Product, Marketing, Engineering, and UX teams on scalable measurement. I also drove Verizon's shift toward <strong>AI-enabled analytics</strong>, building <strong>GenAI-powered data products</strong> and automation that made reporting faster and smarter.</p>
+      <p>Before Verizon, I worked with <em class="co-name co-pwc">PwC</em> on <strong>financial automation</strong> and got my start at <em class="co-name co-adp">ADP</em> and in <strong>healthcare analytics</strong>. That mix of industries has given me a perspective most digital analysts don't have.</p>
       <p>Outside of work, I'm passionate about playing <strong>sports</strong> (badminton, pickleball, cricket, and table tennis), <strong>cooking</strong> (Indian, Japanese, and Italian), photography, hiking, and exploring new adventures.</p>
     </div>
     <div class="reveal" style="transition-delay:0.15s">
@@ -2735,16 +2742,16 @@
 
       <!-- 1. Verizon (current) -->
       <div class="exp-item" id="exp-role-analytics-lead">
-        <div class="exp-node"><div class="exp-dot green"></div></div>
+        <div class="exp-node"><div class="exp-dot co-verizon"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
-            <div class="exp-card-role">Analytics Lead / Consultant<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Engr III – Data Science</span></div>
+            <div class="exp-card-role">Analytics Lead / Consultant<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Consumer AI and Analytics</span></div>
             <div class="exp-card-badges">
               <span class="exp-badge fulltime">Full-time</span>
             </div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company green">Verizon</span>
+            <span class="exp-card-company co-verizon">Verizon</span>
             <span class="exp-card-sep">·</span>
             <span class="exp-card-loc">📍 Basking Ridge, NJ</span>
             <span class="exp-card-period">Jul 2022 – Oct 2026</span>
@@ -2768,20 +2775,21 @@
 
       <!-- 2. AgreeYa | Verizon -->
       <div class="exp-item" id="exp-role-data-analytics-consultant">
-        <div class="exp-node"><div class="exp-dot"></div></div>
+        <div class="exp-node"><div class="exp-dot co-verizon"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
-            <div class="exp-card-role">Data Analytics Consultant<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Client: Verizon</span></div>
+            <div class="exp-card-role">Data Analytics Consultant<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Analytics Enablement and Insights</span></div>
             <div class="exp-card-badges"><span class="exp-badge contract">Contract</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company">AgreeYa Solutions | Verizon</span>
+            <span class="exp-card-company co-verizon">Verizon</span>
+            <span class="exp-card-via">via AgreeYa Solutions</span>
             <span class="exp-card-sep">·</span>
-            <span class="exp-card-loc">📍 Folsom, CA</span>
+            <span class="exp-card-loc">📍 Basking Ridge, NJ</span>
             <span class="exp-card-period">Sep 2021 – Jul 2022</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Served as analytics consultant for RTM and Site Optimization initiatives, partnering with tagging teams to define measurement requirements and validate tracking implementations for accurate data capture. I leveraged SQL in Teradata to query and integrate data across platforms, enabling comprehensive digital performance analysis and reporting, and developed scalable reporting solutions along with a comprehensive measurement framework in Adobe Analytics to track key performance indicators and support data-driven decision-making.</div>
+            <div class="exp-card-desc">Served as analytics consultant embedded with Verizon's RTM and Site Optimization teams, partnering with tagging teams to define measurement requirements and validate tracking implementations for accurate data capture. I leveraged SQL in Teradata to query and integrate data across platforms, enabling comprehensive digital performance analysis and reporting, and developed scalable reporting solutions along with a comprehensive measurement framework in Adobe Analytics to track key performance indicators and support data-driven decision-making.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">SQL (Teradata)</span>
               <span class="exp-card-tag">Adobe Analytics</span>
@@ -2794,16 +2802,17 @@
 
       <!-- 3. Datawin | Verizon -->
       <div class="exp-item" id="exp-role-data-analytics-consultant-ii">
-        <div class="exp-node"><div class="exp-dot"></div></div>
+        <div class="exp-node"><div class="exp-dot co-verizon"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
-            <div class="exp-card-role">Data Analytics Consultant II<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Digital Operations · Client: Verizon</span></div>
+            <div class="exp-card-role">Data Analytics Consultant<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Digital Operations</span></div>
             <div class="exp-card-badges"><span class="exp-badge contract">Contract</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company">Datawin Systems | Verizon</span>
+            <span class="exp-card-company co-verizon">Verizon</span>
+            <span class="exp-card-via">via Datawin Systems</span>
             <span class="exp-card-sep">·</span>
-            <span class="exp-card-loc">📍 Piscataway, NJ</span>
+            <span class="exp-card-loc">📍 Basking Ridge, NJ</span>
             <span class="exp-card-period">Jan 2020 – Jun 2021</span>
           </div>
           <div class="exp-card-body">
@@ -2820,20 +2829,19 @@
 
       <!-- 4. Datawin | PwC -->
       <div class="exp-item" id="exp-role-financial-data-analyst">
-        <div class="exp-node"><div class="exp-dot gold"></div></div>
+        <div class="exp-node"><div class="exp-dot co-pwc"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
-            <div class="exp-card-role">Financial Data Analyst<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Tax Management Technology · Client: PwC</span></div>
+            <div class="exp-card-role">Financial Data Analyst<br><span style="font-size:0.85rem;font-weight:600;color:var(--muted)">Tax Management Technology</span></div>
             <div class="exp-card-badges"><span class="exp-badge contract">Contract</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company gold">Datawin Systems | PwC</span>
-            <span class="exp-card-sep">·</span>
-            <span class="exp-card-loc">📍 Piscataway, NJ</span>
+            <span class="exp-card-company co-pwc">PricewaterhouseCoopers</span>
+            <span class="exp-card-via">via Datawin Systems</span>
             <span class="exp-card-period">Jan 2019 – Aug 2019</span>
           </div>
           <div class="exp-card-body">
-            <div class="exp-card-desc">Automated financial data workflows using Alteryx, improving processing efficiency and data quality, and built Tableau and Power BI dashboards to support financial reporting and analysis. I developed ETL scripts and SQL queries for scalable reporting solutions and implemented RPA solutions using UiPath to reduce repetitive manual tasks.</div>
+            <div class="exp-card-desc">For PwC's Tax Management Technology team, automated financial data workflows using Alteryx, improving processing efficiency and data quality, and built Tableau and Power BI dashboards to support financial reporting and analysis. I developed ETL scripts and SQL queries for scalable reporting solutions and implemented RPA solutions using UiPath to reduce repetitive manual tasks.</div>
             <div class="exp-card-tags">
               <span class="exp-card-tag">Alteryx</span>
               <span class="exp-card-tag">Power BI</span>
@@ -2847,14 +2855,14 @@
 
       <!-- 5. Integra Technologies -->
       <div class="exp-item" id="exp-role-bi-consultant">
-        <div class="exp-node"><div class="exp-dot"></div></div>
+        <div class="exp-node"><div class="exp-dot co-integra"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
             <div class="exp-card-role">Data Analytics &amp; BI Consultant</div>
             <div class="exp-card-badges"><span class="exp-badge fulltime">Full-time</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company">Integra Technologies</span>
+            <span class="exp-card-company co-integra">Integra Technologies</span>
             <span class="exp-card-sep">·</span>
             <span class="exp-card-loc">📍 Wilmington, DE · Remote</span>
             <span class="exp-card-period">Nov 2017 – Dec 2018</span>
@@ -2873,14 +2881,14 @@
 
       <!-- 6. ADP Full-time -->
       <div class="exp-item" id="exp-role-business-data-analyst">
-        <div class="exp-node"><div class="exp-dot"></div></div>
+        <div class="exp-node"><div class="exp-dot co-adp"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
             <div class="exp-card-role">Business Data Analyst</div>
             <div class="exp-card-badges"><span class="exp-badge fulltime">Full-time</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company">ADP, Inc.</span>
+            <span class="exp-card-company co-adp">ADP, Inc.</span>
             <span class="exp-card-sep">·</span>
             <span class="exp-card-loc">📍 Parsippany, NJ</span>
             <span class="exp-card-period">Jun 2017 – Aug 2017</span>
@@ -2899,14 +2907,14 @@
 
       <!-- 7. ADP Intern -->
       <div class="exp-item" id="exp-role-db2-dba-intern">
-        <div class="exp-node"><div class="exp-dot purple"></div></div>
+        <div class="exp-node"><div class="exp-dot co-adp"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
             <div class="exp-card-role">Mainframe DB2 DBA Intern</div>
             <div class="exp-card-badges"><span class="exp-badge internship">Internship</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company purple">ADP, Inc.</span>
+            <span class="exp-card-company co-adp">ADP, Inc.</span>
             <span class="exp-card-sep">·</span>
             <span class="exp-card-loc">📍 Roseland, NJ</span>
             <span class="exp-card-period">Jun 2016 – Aug 2016</span>
@@ -2925,14 +2933,14 @@
 
       <!-- 8. NJIT -->
       <div class="exp-item" id="exp-role-database-admin-assistant">
-        <div class="exp-node"><div class="exp-dot purple"></div></div>
+        <div class="exp-node"><div class="exp-dot co-njit"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
             <div class="exp-card-role">Database Administrative Assistant</div>
             <div class="exp-card-badges"><span class="exp-badge parttime">Part-time</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company purple">New Jersey Institute of Technology</span>
+            <span class="exp-card-company co-njit">New Jersey Institute of Technology</span>
             <span class="exp-card-sep">·</span>
             <span class="exp-card-loc">📍 Newark, NJ</span>
             <span class="exp-card-period">Aug 2016 – Dec 2016</span>
@@ -2950,14 +2958,14 @@
 
       <!-- 9. Healthcare Pharmacy -->
       <div class="exp-item" id="exp-role-healthcare-data-analyst">
-        <div class="exp-node"><div class="exp-dot purple"></div></div>
+        <div class="exp-node"><div class="exp-dot co-healthcare"></div></div>
         <div class="exp-card">
           <div class="exp-card-top">
             <div class="exp-card-role">Healthcare Data Analyst</div>
             <div class="exp-card-badges"><span class="exp-badge parttime">Part-time</span></div>
           </div>
           <div class="exp-card-meta">
-            <span class="exp-card-company purple">Healthcare Pharmacy</span>
+            <span class="exp-card-company co-healthcare">Healthcare Pharmacy</span>
             <span class="exp-card-sep">·</span>
             <span class="exp-card-loc">📍 Bronx, NY</span>
             <span class="exp-card-period">Sep 2015 – Aug 2016</span>
@@ -5668,7 +5676,7 @@ function toggleProj(el) {
     },
     {
       keys: ['experience','years','career','history','long','worked','journey','companies'],
-      answer: "Tarun has 8+ years of analytics experience across these roles:\n• Analytics Lead / Consultant Engr III – Data Science at Verizon (Jul 2022–Oct 2026)\n• Data Analytics Consultant at AgreeYa Solutions | Verizon (Sep 2021–Jul 2022)\n• Data Analytics Consultant II at Datawin Systems | Verizon (Jan 2020–Jun 2021)\n• Financial Data Analyst at Datawin Systems | PwC (Jan 2019–Aug 2019)\n• Data Analytics & BI Consultant at Integra Technologies (Nov 2017–Dec 2018)\n• Business Data Analyst at ADP, Inc. (Jun 2017–Aug 2017)\n• DB2 DBA Intern at ADP, Inc. (Jun 2016–Aug 2016)"
+      answer: "Tarun has 8+ years of analytics experience across these roles:\n• Analytics Lead / Consultant Engr III – Data Science at Verizon (Jul 2022–Oct 2026)\n• Data Analytics Consultant at Verizon, via AgreeYa Solutions (Sep 2021–Jul 2022)\n• Data Analytics Consultant at Verizon, via Datawin Systems (Jan 2020–Jun 2021)\n• Financial Data Analyst at PwC, via Datawin Systems (Jan 2019–Aug 2019)\n• Data Analytics & BI Consultant at Integra Technologies (Nov 2017–Dec 2018)\n• Business Data Analyst at ADP, Inc. (Jun 2017–Aug 2017)\n• DB2 DBA Intern at ADP, Inc. (Jun 2016–Aug 2016)"
     },
     {
       keys: ['current','role','job','verizon','now','working','position','title','doing'],
@@ -5740,7 +5748,7 @@ function toggleProj(el) {
     },
     {
       keys: ['agreeya','folsom','california','rtm','real time marketing'],
-      answer: "At AgreeYa Solutions (Sep 2021–Jul 2022), Tarun served as an analytics consultant for Verizon's Real-Time Marketing (RTM) and Site Optimization initiatives. He delivered insights and dashboards to senior stakeholders, queried data using SQL (Teradata), and developed scalable reporting in Adobe Analytics."
+      answer: "As a consultant at Verizon through AgreeYa Solutions (Sep 2021–Jul 2022), Tarun served as an analytics consultant for Verizon's Real-Time Marketing (RTM) and Site Optimization initiatives. He delivered insights and dashboards to senior stakeholders, queried data using SQL (Teradata), and developed scalable reporting in Adobe Analytics."
     },
     {
       keys: ['hobby','hobbies','interest','outside','personal','sport','fun','life','cook','cooking','photography','hiking'],
@@ -5803,7 +5811,7 @@ function toggleProj(el) {
   var chatHistory = [];
 
   // Portfolio context for Claude
-  var PORTFOLIO_CONTEXT = 'You are a helpful assistant embedded in Tarun Palthi\'s portfolio website. Answer questions about Tarun based on the info below. Be concise, warm, and conversational — like a knowledgeable friend. Keep responses under 120 words. If asked something not covered, suggest contacting Tarun at palthitarun@gmail.com.\n\nABOUT: Analytics Manager & Senior Digital Analytics Leader, 8+ years experience. Most recently Analytics Lead / Consultant Engr III at Verizon, Basking Ridge NJ (Jul 2022-Oct 2026). Previously AgreeYa Solutions|Verizon (2021-2022), Datawin Systems|Verizon (2020-2021), Datawin Systems|PwC financial automation (2019), Integra Technologies BI consultant (2017-2018), ADP Business Data Analyst (2017), ADP DB2 DBA Intern (2016), Healthcare Data Analyst (2015-2016).\n\nSKILLS: Expert: Adobe Analytics, SQL/BigQuery/Teradata, A/B & MVT Testing. Advanced: Tableau/Power BI/ThoughtSpot, ContentSquare, Quantum Metrics, Alteryx, UiPath RPA, Python. Cloud: GCP BigQuery, AWS Redshift.\n\nIMPACT: $500M+ annualized incremental revenue, 150+ experiments analyzed, 150+ executive dashboards built, 3x reporting efficiency improvement.\n\nEDUCATION: MBA New England College (2020-2022, GPA 3.9), MS Computer & Info Science NJIT (2015-2016, GPA 3.9), B.Tech CS Engineering VNR VJIET India (2011-2015, GPA 3.8).\n\nCERTIFICATIONS: Contentsquare Certified, SQL for Data Science BigQuery, Alteryx Designer Core, Tableau 10 BI, Advanced SQL, Google Analytics IQ, AWS Data Analytics, Scrum Master, and 10+ more.\n\nCONTACT: palthitarun@gmail.com, (201) 744-4259, LinkedIn (in nav), about.me. Open to Analytics Manager & Senior Analytics Manager roles.\n\nLANGUAGES: English (fluent), Hindi (fluent), Telugu (native).\n\nHOBBIES: Badminton, pickleball, cricket, table tennis, cooking (Indian/Japanese/Italian), photography, hiking.';
+  var PORTFOLIO_CONTEXT = 'You are a helpful assistant embedded in Tarun Palthi\'s portfolio website. Answer questions about Tarun based on the info below. Be concise, warm, and conversational — like a knowledgeable friend. Keep responses under 120 words. If asked something not covered, suggest contacting Tarun at palthitarun@gmail.com.\n\nABOUT: Analytics Manager & Senior Digital Analytics Leader, 8+ years experience. Most recently Analytics Lead / Consultant Engr III at Verizon, Basking Ridge NJ (Jul 2022-Oct 2026). Previously Verizon via AgreeYa Solutions (2021-2022), Verizon via Datawin Systems (2020-2021), PwC via Datawin Systems, financial automation (2019), Integra Technologies BI consultant (2017-2018), ADP Business Data Analyst (2017), ADP DB2 DBA Intern (2016), Healthcare Data Analyst (2015-2016).\n\nSKILLS: Expert: Adobe Analytics, SQL/BigQuery/Teradata, A/B & MVT Testing. Advanced: Tableau/Power BI/ThoughtSpot, ContentSquare, Quantum Metrics, Alteryx, UiPath RPA, Python. Cloud: GCP BigQuery, AWS Redshift.\n\nIMPACT: $500M+ annualized incremental revenue, 150+ experiments analyzed, 150+ executive dashboards built, 3x reporting efficiency improvement.\n\nEDUCATION: MBA New England College (2020-2022, GPA 3.9), MS Computer & Info Science NJIT (2015-2016, GPA 3.9), B.Tech CS Engineering VNR VJIET India (2011-2015, GPA 3.8).\n\nCERTIFICATIONS: Contentsquare Certified, SQL for Data Science BigQuery, Alteryx Designer Core, Tableau 10 BI, Advanced SQL, Google Analytics IQ, AWS Data Analytics, Scrum Master, and 10+ more.\n\nCONTACT: palthitarun@gmail.com, (201) 744-4259, LinkedIn (in nav), about.me. Open to Analytics Manager & Senior Analytics Manager roles.\n\nLANGUAGES: English (fluent), Hindi (fluent), Telugu (native).\n\nHOBBIES: Badminton, pickleball, cricket, table tennis, cooking (Indian/Japanese/Italian), photography, hiking.';
 
   var API_FAILED = false; // Once API fails with credits error, stay in KB mode
 
@@ -6062,20 +6070,21 @@ function toggleProj(el) {
   }
 
   var careerCompChart = null;
+  var companyColors = { verizon: '#e5484d', pwc: '#f59e0b', integra: '#14b8a6', adp: '#3b82f6', njit: '#a855f7', healthcare: '#22c55e' };
   var careerSegments = [
-    { type: 'role', role: 'Healthcare Data Analyst', label: 'Healthcare Pharmacy', months: 12 },
-    { type: 'role', role: 'Mainframe DB2 DBA Intern', label: 'ADP, Inc.', months: 3 },
-    { type: 'role', role: 'Database Admin Assistant', label: 'New Jersey Institute of Technology', months: 5 },
+    { type: 'role', role: 'Healthcare Data Analyst', company: 'healthcare', label: 'Healthcare Pharmacy', months: 12 },
+    { type: 'role', role: 'Mainframe DB2 DBA Intern', company: 'adp', label: 'ADP, Inc.', months: 3 },
+    { type: 'role', role: 'Database Admin Assistant', company: 'njit', label: 'New Jersey Institute of Technology', months: 5 },
     { type: 'gap', months: 5 },
-    { type: 'role', role: 'Business Data Analyst', label: 'ADP, Inc.', months: 3 },
+    { type: 'role', role: 'Business Data Analyst', company: 'adp', label: 'ADP, Inc.', months: 3 },
     { type: 'gap', months: 2 },
-    { type: 'role', role: 'Data Analytics & BI Consultant', label: 'Integra Technologies', months: 14 },
-    { type: 'role', role: 'Financial Data Analyst', label: 'Datawin Systems (PwC)', months: 8 },
+    { type: 'role', role: 'Data Analytics & BI Consultant', company: 'integra', label: 'Integra Technologies', months: 14 },
+    { type: 'role', role: 'Financial Data Analyst', company: 'pwc', label: 'PwC (via Datawin Systems)', months: 8 },
     { type: 'gap', months: 4 },
-    { type: 'role', role: 'Data Analytics Consultant II', label: 'Datawin Systems (Verizon)', months: 18 },
+    { type: 'role', role: 'Data Analytics Consultant', cardId: 'exp-role-data-analytics-consultant-ii', company: 'verizon', label: 'Verizon (via Datawin Systems)', months: 18 },
     { type: 'gap', months: 2 },
-    { type: 'role', role: 'Data Analytics Consultant', label: 'AgreeYa Solutions (Verizon)', months: 11 },
-    { type: 'role', role: 'Analytics Lead / Consultant', label: 'Verizon', months: 52 }
+    { type: 'role', role: 'Data Analytics Consultant', cardId: 'exp-role-data-analytics-consultant', company: 'verizon', label: 'Verizon (via AgreeYa Solutions)', months: 11 },
+    { type: 'role', role: 'Analytics Lead / Consultant', company: 'verizon', label: 'Verizon', months: 52 }
   ];
   var careerYearTicks = [[2016,4],[2017,20],[2018,32],[2019,44],[2020,56],[2021,68],[2022,80],[2023,93],[2024,105],[2025,117],[2026,129]];
   var careerRoleToId = {
@@ -6090,7 +6099,7 @@ function toggleProj(el) {
     'Analytics Lead / Consultant': 'exp-role-analytics-lead'
   };
   function goToExpCard(role) {
-    var id = careerRoleToId[role];
+    var id = careerRoleToId[role] || role;
     if (!id) return;
     var el = document.getElementById(id);
     if (!el) return;
@@ -6118,7 +6127,7 @@ function toggleProj(el) {
       if (s.type === 'role') {
         var color = mixColor(lightEnd, darkEnd, roleCount === 1 ? 1 : ri / (roleCount - 1));
         ri++;
-        return { label: s.label, role: s.role, isGap: false, months: s.months, data: [s.months], backgroundColor: color, borderColor: surface, borderWidth: { top: 0, bottom: 0, left: 1, right: 1 }, barThickness: 90 };
+        return { label: s.label, role: s.role, cardId: s.cardId, isGap: false, months: s.months, data: [s.months], backgroundColor: color, borderColor: surface, borderWidth: { top: 0, bottom: 0, left: 1, right: 1 }, barThickness: 90 };
       }
       return { label: 'Between roles', role: 'Between roles', isGap: true, months: s.months, data: [s.months], backgroundColor: gapColor, barThickness: 90 };
     });
@@ -6145,7 +6154,7 @@ function toggleProj(el) {
           var el = elements[0];
           var ds = careerCompChart.data.datasets[el.datasetIndex];
           if (ds.isGap) return;
-          goToExpCard(ds.role);
+          goToExpCard(ds.cardId || ds.role);
         },
         scales: {
           x: {
